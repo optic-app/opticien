@@ -1598,7 +1598,7 @@ async function loadClientData(clientId) {
         console.log("Tentative de chargement des données pour l'ID:", clientId);
         document.getElementById('client-name').textContent = "Chargement...";
         
-        const apiUrl = `https://script.google.com/macros/s/AKfycbysh1x1-9a-sf2fu3Dn83sa1EbG6CpjLlVmbW0Fhkhxfkc2GC1uD55YCf-34CK8QGIv/exec?action=getClientDetails&clientId=${encodeURIComponent(clientId)}`;
+        const apiUrl = `https://script.google.com/macros/s/AKfycbzx_aCgqdIU7dO5cKb-1j6CxzIc_H9rfatnXR1eGCagcyVYyBd2NK80SjU8gTqp6tvKoQ/exec?action=getClientDetails&clientId=${encodeURIComponent(clientId)}`;
         console.log("URL de l'API:", apiUrl);
         
         const response = await fetch(apiUrl);
@@ -2640,7 +2640,7 @@ async function submitComplementForm() {
     submitButton.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Enregistrement...';
 
     try {
-        const apiUrl = "https://script.google.com/macros/s/AKfycbysh1x1-9a-sf2fu3Dn83sa1EbG6CpjLlVmbW0Fhkhxfkc2GC1uD55YCf-34CK8QGIv/exec?action=addComplement";
+        const apiUrl = "https://script.google.com/macros/s/AKfycbzx_aCgqdIU7dO5cKb-1j6CxzIc_H9rfatnXR1eGCagcyVYyBd2NK80SjU8gTqp6tvKoQ/exec?action=addComplement";
 
         const response = await fetch(apiUrl, {
             method: 'POST',
@@ -2719,7 +2719,7 @@ function handleStatusChange() {
 async function loadEtuiReferences() {
     try {
         console.log('[loadEtuiReferences] Début du chargement des références');
-        const apiUrl = 'https://script.google.com/macros/s/AKfycbysh1x1-9a-sf2fu3Dn83sa1EbG6CpjLlVmbW0Fhkhxfkc2GC1uD55YCf-34CK8QGIv/exec?action=catalogue';
+        const apiUrl = 'https://script.google.com/macros/s/AKfycbzx_aCgqdIU7dO5cKb-1j6CxzIc_H9rfatnXR1eGCagcyVYyBd2NK80SjU8gTqp6tvKoQ/exec?action=catalogue';
         
         console.log('[loadEtuiReferences] URL appelée:', apiUrl);
         const response = await fetch(apiUrl);
@@ -2887,7 +2887,7 @@ async function updateDealStatus(newStatus, deliveryInfo = null) {
     }
 
     try {
-        const apiUrl = "https://script.google.com/macros/s/AKfycbysh1x1-9a-sf2fu3Dn83sa1EbG6CpjLlVmbW0Fhkhxfkc2GC1uD55YCf-34CK8QGIv/exec?action=updateDealStatus";
+        const apiUrl = "https://script.google.com/macros/s/AKfycbzx_aCgqdIU7dO5cKb-1j6CxzIc_H9rfatnXR1eGCagcyVYyBd2NK80SjU8gTqp6tvKoQ/exec?action=updateDealStatus";
         
         const response = await fetch(apiUrl, {
             method: 'POST',
@@ -3219,7 +3219,7 @@ async function saveCallLog() {
     }
     
     try {
-        const apiUrl = "https://script.google.com/macros/s/AKfycbysh1x1-9a-sf2fu3Dn83sa1EbG6CpjLlVmbW0Fhkhxfkc2GC1uD55YCf-34CK8QGIv/exec?action=logCall";
+        const apiUrl = "https://script.google.com/macros/s/AKfycbzx_aCgqdIU7dO5cKb-1j6CxzIc_H9rfatnXR1eGCagcyVYyBd2NK80SjU8gTqp6tvKoQ/exec?action=logCall";
         
         const response = await fetch(apiUrl, {
             method: 'POST',
