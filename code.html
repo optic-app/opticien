@@ -308,7 +308,7 @@
             // Clear previous messages
             message.style.display = 'none';
 
-            fetch(`https://script.google.com/macros/s/AKfycbysh1x1-9a-sf2fu3Dn83sa1EbG6CpjLlVmbW0Fhkhxfkc2GC1uD55YCf-34CK8QGIv/exec?action=login&username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`)
+            fetch(`https://script.google.com/macros/s/AKfycbzx_aCgqdIU7dO5cKb-1j6CxzIc_H9rfatnXR1eGCagcyVYyBd2NK80SjU8gTqp6tvKoQ/exec?action=login&username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`)
                 .then(res => res.json())
                 .then(data => {
                     if (data.success) {
