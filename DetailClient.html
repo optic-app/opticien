@@ -2987,376 +2987,659 @@ document.head.appendChild(style);
 console.log('Styles d\'animation ajoutés');   
 </script>
 <script>
-// Variables pour stocker le numéro à appeler
-let currentPhoneNumber = '';
-
-// Détection mobile (garde si tu veux afficher/masquer le bouton)
-function isMobileDevice() {
-    return /Mobi|Android|iPhone|iPad|iPod|IEMobile|WPDesktop/i.test(navigator.userAgent);
-}
-
-// Nettoyer et garder 10 chiffres
-function cleanPhoneNumber(phoneNumber) {
-    let digitsOnly = phoneNumber.replace(/\D/g, '');
-    if (digitsOnly.length > 10) {
-        digitsOnly = digitsOnly.slice(-10);
-    }
-    return digitsOnly;
-}
-
-// Formater pour affichage
-function formatPhoneNumberForDisplay(phoneNumber) {
-    return phoneNumber.replace(/(\d{2})(?=\d)/g, '$1 ');
-}
-
-// Ouvrir la fenêtre de confirmation
-function initiatePhoneCall() {
-    const phoneElement = document.getElementById('client-phone');
-    if (!phoneElement) {
-        alert("Élément numéro de téléphone non trouvé");
-        return;
-    }
-
-    const rawNumber = phoneElement.textContent.trim();
-    if (!rawNumber || rawNumber === 'N/A' || rawNumber === 'Chargement...') {
-        alert("Numéro de téléphone non disponible");
-        return;
-    }
-
-    const cleanedNumber = cleanPhoneNumber(rawNumber);
-
-    if (cleanedNumber.length !== 10) {
-        alert("Numéro de téléphone invalide: " + rawNumber);
-        return;
-    }
-
-    currentPhoneNumber = cleanedNumber;
-    document.getElementById('confirmPhoneNumber').textContent = cleanedNumber;
-    document.getElementById('callConfirmationModal').style.display = 'flex';
-}
-
-// Confirmer l'appel → envoie à Thunkable
-function confirmCall() {
-    if (currentPhoneNumber) {
-        if (window.ReactNativeWebView) {
-            window.ReactNativeWebView.postMessage(JSON.stringify({
-                action: "call",
-                number: currentPhoneNumber
-            }));
-        } else {
-            alert("Thunkable Web_Viewer non détecté");
-        }
-    }
-    cancelCall();
-}
-
-// Annuler
-function cancelCall() {
-    document.getElementById('callConfirmationModal').style.display = 'none';
-    currentPhoneNumber = '';
-}
-
-// Afficher bouton d'appel sur mobile
-document.addEventListener('DOMContentLoaded', function() {
-    const mobileCallBtn = document.getElementById('mobileCallBtn');
-    if (isMobileDevice()) {
-        mobileCallBtn.style.display = 'block';
-        mobileCallBtn.addEventListener('click', initiatePhoneCall);
-    }
-});
-
-// Styles
-if (!document.getElementById('mobileCallBtnStyle')) {
-    const style = document.createElement('style');
-    style.id = 'mobileCallBtnStyle';
-    style.textContent = `
-        .mobile-call-btn {
-            background-color: #28a745;
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-right: 10px;
-            cursor: pointer;
-        }
-        .mobile-call-btn:hover {
-            background-color: #218838;
-        }
-        @media (max-width: 768px) {
-            .user-info {
-                display: flex;
-                align-items: center;
-            }
-        }
-    `;
-    document.head.appendChild(style);
-}
-</script>
 <script>
-// Variables pour stocker le numéro à appeler et les informations du client
-let currentPhoneNumber = '';
-let currentClientId = '';
-let currentUsername = '';
+// Variables pour stocker les informations d'appel
+let currentCallData = {
+    phoneNumber: '',
+    clientId: '',
+    username: '',
+    timestamp: null
+};
 
-// Détection mobile (garde si tu veux afficher/masquer le bouton)
-function isMobileDevice() {
-    return /Mobi|Android|iPhone|iPad|iPod|IEMobile|WPDesktop/i.test(navigator.userAgent);
-}
+// Configuration
+const CALL_CONFIG = {
+    autoLogDelay: 2000, // 2 secondes après l'appel
+    maxLogTime: 10 * 60 * 1000, // 10 minutes
+    minNoteLength: 5 // Caractères minimum pour la note
+};
 
-// Nettoyer et garder 10 chiffres
+// Nettoyer et valider le numéro
 function cleanPhoneNumber(phoneNumber) {
+    if (!phoneNumber) return null;
+    
     let digitsOnly = phoneNumber.replace(/\D/g, '');
     if (digitsOnly.length > 10) {
         digitsOnly = digitsOnly.slice(-10);
     }
-    return digitsOnly;
+    
+    return digitsOnly.length === 10 ? digitsOnly : null;
 }
 
 // Formater pour affichage
-function formatPhoneNumberForDisplay(phoneNumber) {
+function formatPhoneNumber(phoneNumber) {
     return phoneNumber.replace(/(\d{2})(?=\d)/g, '$1 ');
 }
 
-// Ouvrir la fenêtre de confirmation
+// Vérifier si c'est un appareil mobile
+function isMobileDevice() {
+    return /Mobi|Android|iPhone|iPad|iPod|IEMobile|WPDesktop/i.test(navigator.userAgent);
+}
+
+// Gestionnaire d'appel principal
 function initiatePhoneCall() {
     const phoneElement = document.getElementById('client-phone');
     if (!phoneElement) {
-        alert("Élément numéro de téléphone non trouvé");
+        showNotification('Élément numéro de téléphone non trouvé', 'error');
         return;
     }
 
     const rawNumber = phoneElement.textContent.trim();
-    if (!rawNumber || rawNumber === 'N/A' || rawNumber === 'Chargement...') {
-        alert("Numéro de téléphone non disponible");
-        return;
-    }
-
     const cleanedNumber = cleanPhoneNumber(rawNumber);
 
-    if (cleanedNumber.length !== 10) {
-        alert("Numéro de téléphone invalide: " + rawNumber);
+    if (!cleanedNumber) {
+        showNotification('Numéro de téléphone invalide ou non disponible', 'error');
         return;
     }
 
-    // Stocker les informations pour la consigne
-    currentPhoneNumber = cleanedNumber;
-    currentClientId = document.getElementById('client-id').textContent;
-    currentUsername = sessionStorage.getItem("utilisateur") || localStorage.getItem("utilisateur");
+    // Préparer les données d'appel
+    currentCallData = {
+        phoneNumber: cleanedNumber,
+        clientId: document.getElementById('client-id')?.textContent || 'N/A',
+        username: sessionStorage.getItem("utilisateur") || localStorage.getItem("utilisateur") || 'Utilisateur inconnu',
+        timestamp: Date.now()
+    };
+
+    showCallConfirmation();
+}
+
+// Afficher la confirmation d'appel
+function showCallConfirmation() {
+    document.getElementById('confirmPhoneNumber').textContent = 
+        formatPhoneNumber(currentCallData.phoneNumber);
+    document.getElementById('confirmClientInfo').textContent = 
+        `Client: ${currentCallData.clientId}`;
     
-    document.getElementById('confirmPhoneNumber').textContent = cleanedNumber;
-    document.getElementById('callConfirmationModal').style.display = 'flex';
+    showModal('callConfirmationModal');
 }
 
-// Confirmer l'appel → envoie à Thunkable
+// Confirmer et passer l'appel
 function confirmCall() {
-    if (currentPhoneNumber) {
-        if (window.ReactNativeWebView) {
-            window.ReactNativeWebView.postMessage(JSON.stringify({
-                action: "call",
-                number: currentPhoneNumber
-            }));
-            
-            // Stocker l'information qu'un appel vient d'être passé
-            localStorage.setItem('lastCallInfo', JSON.stringify({
-                clientId: currentClientId,
-                username: currentUsername,
-                phoneNumber: currentPhoneNumber,
-                timestamp: new Date().getTime()
-            }));
-        } else {
-            alert("Thunkable Web_Viewer non détecté");
-        }
+    if (!currentCallData.phoneNumber) {
+        showNotification('Erreur: numéro non disponible', 'error');
+        return;
     }
-    cancelCall();
+
+    // Sauvegarder les infos pour la consigne automatique
+    localStorage.setItem('pendingCallLog', JSON.stringify(currentCallData));
+    
+    // Passer l'appel
+    window.location.href = `tel:${currentCallData.phoneNumber}`;
+    
+    // Fermer la modale
+    hideModal('callConfirmationModal');
+    
+    // Planifier l'ouverture automatique de la consigne
+    setTimeout(openAutoCallLog, CALL_CONFIG.autoLogDelay);
 }
 
-// Annuler
+// Annuler l'appel
 function cancelCall() {
-    document.getElementById('callConfirmationModal').style.display = 'none';
-    currentPhoneNumber = '';
+    hideModal('callConfirmationModal');
+    currentCallData.phoneNumber = '';
 }
 
-// Fonction pour ouvrir automatiquement la modale de consigne
-function openLogModalAutomatically() {
-    const lastCallInfo = localStorage.getItem('lastCallInfo');
-    if (lastCallInfo) {
-        const callInfo = JSON.parse(lastCallInfo);
+// Ouvrir automatiquement la consigne après appel
+function openAutoCallLog() {
+    const storedCall = localStorage.getItem('pendingCallLog');
+    if (!storedCall) return;
+
+    const callInfo = JSON.parse(storedCall);
+    
+    // Vérifier si l'appel est récent
+    const isRecentCall = (Date.now() - callInfo.timestamp) <= CALL_CONFIG.maxLogTime;
+    
+    if (isRecentCall) {
+        // Pré-remplir le formulaire
+        document.getElementById('logClientId').value = callInfo.clientId;
+        document.getElementById('logUser').value = callInfo.username;
+        document.getElementById('logPhoneNumber').value = formatPhoneNumber(callInfo.phoneNumber);
         
-        // Vérifier si l'appel a été passé il y a moins de 5 minutes
-        const fiveMinutesAgo = new Date().getTime() - (5 * 60 * 1000);
-        if (callInfo.timestamp > fiveMinutesAgo) {
-            // Remplir automatiquement les champs
-            document.getElementById('logClientId').value = callInfo.clientId;
-            document.getElementById('logUser').value = callInfo.username;
+        // Focus automatique sur le champ note
+        setTimeout(() => {
+            document.getElementById('logNote').focus();
+        }, 100);
+        
+        showModal('logCallModal');
+    } else {
+        localStorage.removeItem('pendingCallLog');
+    }
+}
+
+// Enregistrer la consigne d'appel
+async function saveCallLog() {
+    const note = document.getElementById('logNote').value.trim();
+    
+    // Validation
+    if (note.length < CALL_CONFIG.minNoteLength) {
+        showNotification(`Veuillez saisir une note d'au moins ${CALL_CONFIG.minNoteLength} caractères`, 'warning');
+        document.getElementById('logNote').focus();
+        return;
+    }
+
+    const logData = {
+        clientId: document.getElementById('logClientId').value,
+        user: document.getElementById('logUser').value,
+        phoneNumber: cleanPhoneNumber(document.getElementById('logPhoneNumber').value),
+        note: note,
+        timestamp: new Date().toISOString(),
+        duration: document.getElementById('logDuration')?.value || 'Non spécifié'
+    };
+
+    const saveButton = document.getElementById('saveLogBtn');
+    const originalText = saveButton.innerHTML;
+    
+    // État de chargement
+    saveButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enregistrement...';
+    saveButton.disabled = true;
+
+    try {
+        const apiUrl = "https://script.google.com/macros/s/AKfycbysh1x1-9a-sf2fu3Dn83sa1EbG6CpjLlVmbW0Fhkhxfkc2GC1uD55YCf-34CK8QGIv/exec?action=logCall";
+        
+        const response = await fetch(apiUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(logData)
+        });
+
+        if (response.ok) {
+            showNotification('Appel consigné avec succès!', 'success');
+            closeLogModal();
             
-            // Afficher la modale
-            document.getElementById('logCallModal').style.display = 'flex';
-            
-            // Supprimer l'information pour ne pas réafficher la modale
-            localStorage.removeItem('lastCallInfo');
+            // Optionnel: déclencher un rafraîchissement des données
+            if (typeof refreshCallLogs === 'function') {
+                refreshCallLogs();
+            }
+        } else {
+            throw new Error('Erreur serveur');
         }
+        
+    } catch (error) {
+        console.error("Erreur lors de l'enregistrement:", error);
+        showNotification('Erreur lors de l\'enregistrement de l\'appel', 'error');
+    } finally {
+        saveButton.innerHTML = originalText;
+        saveButton.disabled = false;
+        localStorage.removeItem('pendingCallLog');
     }
 }
 
 // Fermer la modale de consigne
 function closeLogModal() {
-    document.getElementById('logCallModal').style.display = 'none';
+    hideModal('logCallModal');
+    document.getElementById('logNote').value = '';
+    localStorage.removeItem('pendingCallLog');
 }
 
-// Enregistrer la consigne d'appel
-async function saveCallLog() {
-    const clientId = document.getElementById('logClientId').value;
-    const user = document.getElementById('logUser').value;
-    const note = document.getElementById('logNote').value;
-    
-    if (!note) {
-        alert("Veuillez saisir une note pour cet appel");
-        return;
-    }
-    
-    try {
-        const apiUrl = "https://script.google.com/macros/s/AKfycbzx_aCgqdIU7dO5cKb-1j6CxzIc_H9rfatnXR1eGCagcyVYyBd2NK80SjU8gTqp6tvKoQ/exec?action=logCall";
-        
-        const response = await fetch(apiUrl, {
-            method: 'POST',
-            mode: 'no-cors',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                clientId: clientId,
-                user: user,
-                note: note,
-                timestamp: new Date().toISOString()
-            })
-        });
-        
-        alert("Appel consigné avec succès!");
-        closeLogModal();
-        
-    } catch (error) {
-        console.error("Erreur lors de l'enregistrement:", error);
-        alert("Erreur lors de l'enregistrement de l'appel");
-    }
+// Gestionnaire modales
+function showModal(modalId) {
+    document.getElementById(modalId).style.display = 'flex';
+    document.body.style.overflow = 'hidden';
 }
 
-// Afficher bouton d'appel sur mobile
+function hideModal(modalId) {
+    document.getElementById(modalId).style.display = 'none';
+    document.body.style.overflow = '';
+}
+
+// Système de notification
+function showNotification(message, type = 'info') {
+    // Créer ou réutiliser le container de notifications
+    let container = document.getElementById('notificationContainer');
+    if (!container) {
+        container = document.createElement('div');
+        container.id = 'notificationContainer';
+        container.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 10002;
+            max-width: 300px;
+        `;
+        document.body.appendChild(container);
+    }
+
+    const notification = document.createElement('div');
+    notification.className = `notification notification-${type}`;
+    notification.innerHTML = `
+        <div class="notification-content">
+            <span class="notification-message">${message}</span>
+            <button class="notification-close" onclick="this.parentElement.parentElement.remove()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+    `;
+
+    container.appendChild(notification);
+
+    // Auto-suppression après 5 secondes
+    setTimeout(() => {
+        if (notification.parentElement) {
+            notification.remove();
+        }
+    }, 5000);
+}
+
+// Raccourci clavier pour annuler (Echap)
+document.addEventListener('keydown', function(event) {
+    if (event.key === 'Escape') {
+        if (document.getElementById('callConfirmationModal').style.display === 'flex') {
+            cancelCall();
+        }
+        if (document.getElementById('logCallModal').style.display === 'flex') {
+            closeLogModal();
+        }
+    }
+});
+
+// Initialisation
 document.addEventListener('DOMContentLoaded', function() {
+    // Configurer le bouton d'appel mobile
     const mobileCallBtn = document.getElementById('mobileCallBtn');
-    if (isMobileDevice()) {
+    if (mobileCallBtn && isMobileDevice()) {
         mobileCallBtn.style.display = 'block';
         mobileCallBtn.addEventListener('click', initiatePhoneCall);
     }
     
-    // Vérifier si on doit ouvrir la modale de consigne au chargement
-    openLogModalAutomatically();
+    // Vérifier les appels en attente au chargement
+    setTimeout(openAutoCallLog, 1000);
     
-    // Écouter les événements de visibilité de page (retour d'appel)
-    document.addEventListener('visibilitychange', function() {
-        if (!document.hidden) {
-            // La page est redevenue visible (utilisateur est revenu)
-            openLogModalAutomatically();
-        }
-    });
-    
-    // Configurer le bouton d'enregistrement
-    document.getElementById('saveLogBtn').addEventListener('click', saveCallLog);
+    // Fermer les modales en cliquant à l'extérieur
+    setupModalCloseHandlers();
 });
 
-// Styles
-if (!document.getElementById('mobileCallBtnStyle')) {
-    const style = document.createElement('style');
-    style.id = 'mobileCallBtnStyle';
-    style.textContent = `
-        .mobile-call-btn {
-            background-color: #28a745;
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-right: 10px;
-            cursor: pointer;
+// Gestionnaire de fermeture des modales
+function setupModalCloseHandlers() {
+    const modals = ['callConfirmationModal', 'logCallModal'];
+    
+    modals.forEach(modalId => {
+        const modal = document.getElementById(modalId);
+        if (modal) {
+            modal.addEventListener('click', function(event) {
+                if (event.target === modal) {
+                    if (modalId === 'callConfirmationModal') cancelCall();
+                    if (modalId === 'logCallModal') closeLogModal();
+                }
+            });
         }
-        .mobile-call-btn:hover {
-            background-color: #218838;
-        }
-        @media (max-width: 768px) {
-            .user-info {
-                display: flex;
-                align-items: center;
-            }
-        }
-        
-        #logCallModal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            z-index: 10000;
-        }
-        
-        #logCallModal > div {
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            width: 300px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        }
-        
-        #logCallModal h3 {
-            margin-top: 0;
-            margin-bottom: 15px;
-        }
-        
-        #logCallModal label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-        }
-        
-        #logCallModal input,
-        #logCallModal textarea {
-            width: 100%;
-            padding: 8px;
-            margin-bottom: 15px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            box-sizing: border-box;
-        }
-        
-        #logCallModal textarea {
-            height: 80px;
-            resize: vertical;
-        }
-        
-        #logCallModal button {
-            padding: 8px 16px;
-            margin-right: 10px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-        
-        #saveLogBtn {
-            background-color: #4361ee;
-            color: white;
-        }
-    `;
-    document.head.appendChild(style);
+    });
 }
 </script>
+
+<style>
+/* Styles pour le système d'appel */
+.mobile-call-btn {
+    background: linear-gradient(135deg, #28a745, #20c997);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 10px;
+    cursor: pointer;
+    font-size: 20px;
+    box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.mobile-call-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(40, 167, 69, 0.4);
+}
+
+.mobile-call-btn:active {
+    transform: translateY(0);
+}
+
+.mobile-call-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.1);
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.mobile-call-btn:hover::before {
+    opacity: 1;
+}
+
+/* Styles des modales */
+.call-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(5px);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 10000;
+    animation: fadeIn 0.3s ease;
+}
+
+.modal-dialog {
+    background: white;
+    border-radius: 12px;
+    padding: 0;
+    width: 90%;
+    max-width: 400px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    animation: slideUp 0.3s ease;
+    overflow: hidden;
+}
+
+.modal-header {
+    background: linear-gradient(135deg, #4361ee, #3a0ca3);
+    color: white;
+    padding: 20px;
+    text-align: center;
+}
+
+.modal-header h3 {
+    margin: 0;
+    font-size: 1.3rem;
+    font-weight: 600;
+}
+
+.modal-body {
+    padding: 25px;
+    text-align: center;
+}
+
+.phone-number-display {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #2b2d42;
+    margin: 15px 0;
+    padding: 10px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    border: 2px solid #e9ecef;
+}
+
+.client-info {
+    color: #6c757d;
+    font-size: 0.9rem;
+    margin-bottom: 20px;
+}
+
+.modal-footer {
+    padding: 20px;
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    border-top: 1px solid #e9ecef;
+}
+
+.btn {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    min-width: 100px;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #28a745, #20c997);
+    color: white;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(40, 167, 69, 0.4);
+}
+
+.btn-secondary {
+    background: #6c757d;
+    color: white;
+}
+
+.btn-secondary:hover {
+    background: #5a6268;
+    transform: translateY(-2px);
+}
+
+.btn-outline {
+    background: transparent;
+    border: 2px solid #6c757d;
+    color: #6c757d;
+}
+
+.btn-outline:hover {
+    background: #6c757d;
+    color: white;
+}
+
+/* Formulaire de consigne */
+.form-group {
+    margin-bottom: 15px;
+    text-align: left;
+}
+
+.form-label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 600;
+    color: #2b2d42;
+}
+
+.form-control {
+    width: 100%;
+    padding: 10px 12px;
+    border: 2px solid #e9ecef;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    transition: border-color 0.3s ease;
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: #4361ee;
+    box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1);
+}
+
+.form-control[readonly] {
+    background-color: #f8f9fa;
+    color: #6c757d;
+}
+
+textarea.form-control {
+    resize: vertical;
+    min-height: 80px;
+}
+
+/* Notifications */
+.notification {
+    background: white;
+    border-radius: 8px;
+    padding: 0;
+    margin-bottom: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    border-left: 4px solid #4361ee;
+    animation: slideInRight 0.3s ease;
+}
+
+.notification-success {
+    border-left-color: #28a745;
+}
+
+.notification-error {
+    border-left-color: #dc3545;
+}
+
+.notification-warning {
+    border-left-color: #ffc107;
+}
+
+.notification-content {
+    padding: 12px 15px;
+    display: flex;
+    justify-content: between;
+    align-items: center;
+}
+
+.notification-message {
+    flex: 1;
+    font-weight: 500;
+}
+
+.notification-close {
+    background: none;
+    border: none;
+    color: #6c757d;
+    cursor: pointer;
+    padding: 5px;
+    margin-left: 10px;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+}
+
+.notification-close:hover {
+    background-color: #f8f9fa;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideUp {
+    from { 
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to { 
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(100%);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+    .modal-dialog {
+        width: 95%;
+        margin: 10px;
+    }
+    
+    .modal-body {
+        padding: 20px 15px;
+    }
+    
+    .phone-number-display {
+        font-size: 1.3rem;
+    }
+    
+    .modal-footer {
+        flex-direction: column;
+    }
+    
+    .btn {
+        width: 100%;
+    }
+}
+</style>
+
+<!-- Modales HTML améliorées -->
+<div id="callConfirmationModal" class="call-modal">
+    <div class="modal-dialog">
+        <div class="modal-header">
+            <h3><i class="fas fa-phone-alt me-2"></i>Confirmer l'appel</h3>
+        </div>
+        <div class="modal-body">
+            <div class="phone-number-display" id="confirmPhoneNumber"></div>
+            <div class="client-info" id="confirmClientInfo"></div>
+            <p style="color: #6c757d; font-size: 0.9rem;">
+                <i class="fas fa-info-circle me-1"></i>
+                L'appel sera passé et une consigne s'ouvrira automatiquement
+            </p>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" onclick="cancelCall()">
+                <i class="fas fa-times me-2"></i>Annuler
+            </button>
+            <button class="btn btn-primary" onclick="confirmCall()">
+                <i class="fas fa-phone me-2"></i>Appeler
+            </button>
+        </div>
+    </div>
+</div>
+
+<div id="logCallModal" class="call-modal">
+    <div class="modal-dialog">
+        <div class="modal-header">
+            <h3><i class="fas fa-clipboard-list me-2"></i>Consigner l'appel</h3>
+        </div>
+        <div class="modal-body">
+            <div class="form-group">
+                <label class="form-label">ID Client</label>
+                <input type="text" id="logClientId" class="form-control" readonly>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Utilisateur</label>
+                <input type="text" id="logUser" class="form-control" readonly>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Numéro appelé</label>
+                <input type="text" id="logPhoneNumber" class="form-control" readonly>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Durée (optionnel)</label>
+                <input type="text" id="logDuration" class="form-control" placeholder="Ex: 5 minutes">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Notes de l'appel <span style="color: #dc3545;">*</span></label>
+                <textarea id="logNote" class="form-control" 
+                          placeholder="Décrivez le contenu de l'appel, les décisions prises, les actions à suivre..."></textarea>
+                <div style="font-size: 0.8rem; color: #6c757d; margin-top: 5px;">
+                    Minimum 5 caractères requis
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-outline" onclick="closeLogModal()">
+                <i class="fas fa-times me-2"></i>Plus tard
+            </button>
+            <button class="btn btn-primary" id="saveLogBtn" onclick="saveCallLog()">
+                <i class="fas fa-save me-2"></i>Enregistrer
+            </button>
+        </div>
+    </div>
+</div>
 </body>
 </html>
