@@ -3143,28 +3143,15 @@ async function saveCallLog() {
     saveButton.disabled = true;
 
     try {
-        const apiUrl = "https://script.google.com/macros/s/AKfycbysh1x1-9a-sf2fu3Dn83sa1EbG6CpjLlVmbW0Fhkhxfkc2GC1uD55YCf-34CK8QGIv/exec?action=logCall";
-        
+        const apiUrl = "https://script.google.com/macros/s/AKfycbzx_aCgqdIU7dO5cKb-1j6CxzIc_H9rfatnXR1eGCagcyVYyBd2NK80SjU8gTqp6tvKoQ/exec?action=logCall";
         const response = await fetch(apiUrl, {
             method: 'POST',
+            mode: 'no-cors',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify(logData)
+            body: JSON.stringify(statusData)
         });
-
-        if (response.ok) {
-            showNotification('Appel consigné avec succès!', 'success');
-            closeLogModal();
-            
-            // Optionnel: déclencher un rafraîchissement des données
-            if (typeof refreshCallLogs === 'function') {
-                refreshCallLogs();
-            }
-        } else {
-            throw new Error('Erreur serveur');
-        }
-        
     } catch (error) {
         console.error("Erreur lors de l'enregistrement:", error);
         showNotification('Erreur lors de l\'enregistrement de l\'appel', 'error');
