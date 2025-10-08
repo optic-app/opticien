@@ -140,6 +140,13 @@ body {
         transition-duration: 0.01ms !important;
         scroll-behavior: auto !important;
     }
+    
+    .btn::before,
+    .quick-action-btn::before,
+    .menu-link::before {
+        transition: none !important;
+        animation: none !important;
+    }
 }
 
 /* Focus visible pour l'accessibilité */
@@ -376,6 +383,7 @@ select:focus-visible {
     top: 0;
     z-index: var(--z-sticky);
     backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
     background-color: rgba(255, 255, 255, 0.95);
 }
 
@@ -636,14 +644,18 @@ select:focus-visible {
     left: 100%;
 }
 
+.btn:active {
+    transform: translateY(0);
+}
+
 .btn-primary {
-    background-color: var(--primary-500);
+    background-color: var(--primary-600);
     color: white;
     box-shadow: 0 2px 4px rgba(99, 102, 241, 0.3);
 }
 
 .btn-primary:hover {
-    background-color: var(--primary-600);
+    background-color: var(--primary-700);
     transform: translateY(-2px);
     box-shadow: 0 4px 8px rgba(99, 102, 241, 0.4);
 }
@@ -1241,41 +1253,38 @@ tr:hover {
     }
 }
 
-/* Dark mode support */
-@media (prefers-color-scheme: dark) {
-    :root {
-        /* Garder exactement les mêmes valeurs que le mode clair */
-        --card-bg: #ffffff;
-        --gray-50: #f8fafc;
-        --gray-100: #f1f5f9;
-        --gray-200: #e2e8f0;
-        --gray-300: #cbd5e1;
-        --gray-400: #94a3b8;
-        --gray-500: #64748b;
-        --gray-600: #475569;
-        --gray-700: #334155;
-        --gray-800: #1e293b;
-        --gray-900: #0f172a;
+/* Support écrans tactiles */
+@media (hover: none) {
+    .btn:hover {
+        transform: none;
     }
     
-    body {
-        background-color: #f1f5f9;
-        color: #334155;
+    .quick-action-btn:hover {
+        transform: none;
     }
     
-    /* Forcer les couleurs de texte spécifiques */
-    .sidebar {
-        background-color: var(--sidebar-bg);
-        color: var(--sidebar-text);
+    .profile-dropdown:hover .dropdown-menu {
+        display: none;
     }
     
-    .header {
-        background-color: var(--card-bg);
+    .profile-dropdown:focus-within .dropdown-menu {
+        display: block;
     }
-    
-    .card {
-        background-color: var(--card-bg);
-    }
+}
+
+/* Dark mode optionnel */
+[data-theme="dark"] {
+    --card-bg: #1e293b;
+    --gray-50: #0f172a;
+    --gray-100: #1e293b;
+    --gray-200: #334155;
+    --gray-300: #475569;
+    --gray-400: #64748b;
+    --gray-500: #94a3b8;
+    --gray-600: #cbd5e1;
+    --gray-700: #e2e8f0;
+    --gray-800: #f1f5f9;
+    --gray-900: #f8fafc;
 }
 
 /* Animations supplémentaires */
@@ -1290,11 +1299,22 @@ tr:hover {
     }
 }
 
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
 .card, .quick-action-btn {
     animation: fadeIn 0.5s ease-out;
 }
 
-/* Impression */
+/* Styles d'impression */
 @media print {
     .sidebar, .header, .dashboard-buttons, .quick-actions, .pagination-controls {
         display: none !important;
@@ -1310,8 +1330,14 @@ tr:hover {
     }
     
     body {
-        background: white;
-        color: black;
+        background: white !important;
+        color: black !important;
+    }
+    
+    * {
+        background: transparent !important;
+        color: black !important;
+        box-shadow: none !important;
     }
 }
 
@@ -1345,7 +1371,7 @@ tr:hover {
     background: white;
     box-shadow: 0 2px 10px rgba(0,0,0,0.1);
     border-radius: 5px;
-    z-index: 1000;
+    z-index: var(--z-modal);
     max-height: 400px;
     overflow-y: auto;
 }
@@ -1479,7 +1505,7 @@ tr:hover {
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 10000;
+    z-index: var(--z-modal);
 }
 
 .confirmation-box {
@@ -1527,7 +1553,7 @@ tr:hover {
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 9999;
+    z-index: var(--z-modal);
 }
 
 .status-content {
@@ -1561,38 +1587,12 @@ tr:hover {
     display: block;
 }
 
-/* Styles personnalisés pour les filtres compacts */
-.compact-filters .filter-row {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: flex-end;
-    gap: 12px;
-    margin-bottom: 15px;
-}
-
-.compact-filters .filter-group {
-    flex: 1;
-    min-width: 180px;
-}
-
-.compact-filters .filter-action {
-    flex: 0 0 auto;
-    margin-bottom: 15px;
-}
-
-.compact-filters label {
-    display: block;
-    margin-bottom: 5px;
-    font-size: 0.9em;
-    font-weight: 500;
-}
-
 /* Styles personnalisés pour les loaders */
 .loader-overlay {
     position: fixed;
     inset: 0;
     background: rgba(0, 0, 0, 0.7);
-    z-index: 9999;
+    z-index: var(--z-modal);
     display: none;
     justify-content: center;
     align-items: center;
@@ -1619,62 +1619,99 @@ tr:hover {
     margin: 0 auto 1rem;
 }
 
-/* Styles personnalisés pour les modales uniques */
-#addFactureModal .modal-content {
-    width: 90%;
-    max-width: 800px;
-    background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
-    border-radius: 12px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-    border: 1px solid rgba(0, 0, 0, 0.08);
-    overflow: hidden;
-    transform: translateY(20px);
-    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-
-#addFactureModal.active .modal-content {
-    transform: translateY(0);
-}
-
-#addFactureModal .modal-header {
-    background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
-    color: white;
-    padding: 20px;
-    position: relative;
-    border-bottom: none;
-}
-
-#addFactureModal .modal-header::after {
-    content: '';
-    position: absolute;
-    bottom: -10px;
+/* Styles personnalisés pour les conteneurs de loaders */
+.loader-container {
+    position: fixed;
+    top: 0;
     left: 0;
     width: 100%;
-    height: 20px;
-    background: url('data:image/svg+xml;utf8,<svg viewBox="0 0 1200 120" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none"><path d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z" fill="%23f8f9fa" opacity=".25"/><path d="M0,0V15.81C13,36.92,27.64,56.86,47.69,72.05,99.41,111.27,165,111,224.58,91.58c31.15-10.15,60.09-26.07,89.67-39.8,40.92-19,84.73-46,130.83-49.67,36.26-2.85,70.9,9.42,98.6,31.56,31.77,25.39,62.32,62,103.63,73,40.44,10.79,81.35-6.69,119.13-24.28s75.16-39,116.92-43.05c59.73-5.85,113.28,22.88,168.9,38.84,30.2,8.66,59,6.17,87.09-7.5,22.43-10.89,48-26.93,60.65-49.24V0Z" fill="%23f8f9fa" opacity=".5"/><path d="M0,0V5.63C149.93,59,314.09,71.32,475.83,42.57c43-7.64,84.23-20.12,127.61-26.46,59-8.63,112.48,12.24,165.56,35.4C827.93,77.22,886,95.24,951.2,90c86.53-7,172.46-45.71,248.8-84.81V0Z" fill="%23f8f9fa"/></svg>');
-    background-size: cover;
-}
-
-#addFactureModal .btn-primary {
-    background: linear-gradient(135deg, #2575fc 0%, #6a11cb 100%);
-    color: white;
-    position: relative;
-    overflow: hidden;
-}
-
-#addFactureModal .btn-primary::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
     height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-    transition: 0.5s;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: var(--z-modal);
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
 }
 
-#addFactureModal .btn-primary:hover::before {
-    left: 100%;
+.loader {
+    width: 50px;
+    height: 50px;
+    border: 5px solid #f3f3f3;
+    border-top: 5px solid var(--primary-color);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 1rem;
+}
+
+.loader-visible {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Styles personnalisés pour les messages de statut */
+.success-message {
+    background-color: var(--success-color);
+    color: white;
+    padding: 15px;
+    border-radius: var(--border-radius);
+    margin-top: 15px;
+    display: none;
+    animation: fadeIn 0.5s ease;
+}
+
+.error-message {
+    background-color: var(--danger-color);
+    color: white;
+    padding: 15px;
+    border-radius: var(--border-radius);
+    margin-top: 15px;
+    display: none;
+    animation: fadeIn 0.5s ease;
+}
+
+/* Styles personnalisés pour les filtres compacts */
+.compact-filters .filter-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: 12px;
+    margin-bottom: 15px;
+}
+
+.compact-filters .filter-group {
+    flex: 1;
+    min-width: 180px;
+}
+
+.compact-filters .filter-action {
+    flex: 0 0 auto;
+    margin-bottom: 15px;
+}
+
+.compact-filters label {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 0.9em;
+    font-weight: 500;
+}
+
+/* Styles personnalisés pour les sélecteurs avec input */
+.select-with-input {
+    position: relative;
+}
+
+.btn-small {
+    font-size: 0.8rem;
+    padding: 0.25rem 0.5rem;
+    background-color: #f8fafc;
+    border: 1px solid #e2e8f0;
+}
+
+.btn-small:hover {
+    background-color: #e2e8f0;
 }
 
 /* Styles personnalisés pour les indicateurs d'étapes */
@@ -1698,7 +1735,7 @@ tr:hover {
     width: 40px;
     height: 40px;
     border-radius: 50%;
-    background-color: var(--gray-color);
+    background-color: var(--gray-400);
     color: white;
     display: flex;
     align-items: center;
@@ -1811,14 +1848,14 @@ tr:hover {
 
 .payment-label {
     font-size: 0.85rem;
-    color: var(--gray-color);
+    color: var(--gray-500);
     margin-bottom: 0.25rem;
 }
 
 .payment-value {
     font-size: 1.25rem;
     font-weight: 600;
-    color: var(--dark-color);
+    color: var(--gray-800);
 }
 
 .discount-selector {
@@ -1845,78 +1882,38 @@ tr:hover {
     flex-wrap: wrap;
 }
 
-/* Styles personnalisés pour les conteneurs de loaders */
-.loader-container {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.7);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-    opacity: 0;
-    visibility: hidden;
-    transition: all 0.3s ease;
-}
-
-.loader {
-    width: 50px;
-    height: 50px;
-    border: 5px solid #f3f3f3;
-    border-top: 5px solid var(--primary-color);
+/* Composants avancés */
+.avatar {
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
-    animation: spin 1s linear infinite;
-    margin: 0 auto 1rem;
+    object-fit: cover;
 }
 
-.loader-visible {
-    opacity: 1;
-    visibility: visible;
+.badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    background-color: var(--primary-100);
+    color: var(--primary-700);
 }
 
-/* Styles personnalisés pour les messages de statut */
-.success-message {
-    background-color: var(--success-color);
-    color: white;
-    padding: 15px;
-    border-radius: var(--border-radius);
-    margin-top: 15px;
-    display: none;
-    animation: fadeIn 0.5s ease;
+.badge-success {
+    background-color: rgba(16, 185, 129, 0.1);
+    color: var(--success-color);
 }
 
-.error-message {
-    background-color: var(--danger-color);
-    color: white;
-    padding: 15px;
-    border-radius: var(--border-radius);
-    margin-top: 15px;
-    display: none;
-    animation: fadeIn 0.5s ease;
+.badge-warning {
+    background-color: rgba(245, 158, 11, 0.1);
+    color: var(--warning-color);
 }
 
-@keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-}
-
-/* Styles personnalisés pour les sélecteurs avec input */
-.select-with-input {
-    position: relative;
-}
-
-.btn-small {
-    font-size: 0.8rem;
-    padding: 0.25rem 0.5rem;
-    background-color: #f8fafc;
-    border: 1px solid #e2e8f0;
-}
-
-.btn-small:hover {
-    background-color: #e2e8f0;
+.badge-danger {
+    background-color: rgba(239, 68, 68, 0.1);
+    color: var(--danger-color);
 }
 
 /* =======================
@@ -4491,159 +4488,130 @@ tr:hover {
 </head>
 <body>
 <div class="dashboard">
-    <!-- Barre latérale unique début -->
-    <aside class="sidebar">
-        <div class="logo-container">
-            <div class="logo">
-                <img src="logo.png" alt="VOIR PLUS OPTIC Logo" class="logo-image">
-                <span>VOIR PLUS OPTIC</span>
-            </div>
-        </div>
-        <nav class="menu">
-            <!-- Tableau de bord -->
-            <div class="menu-item">
-                <a class="menu-link" href="javascript:void(0)" onclick="toggleMenu(this)">
-                    <i class="fas fa-home"></i>
-                    <span>Tableau de bord</span>
-                    <i class="fas fa-chevron-down chevron"></i>
-                </a>
-                <div class="submenu">
-                    <a href="javascript:void(0)" onclick="openVueGlobale()">
-                        <i class="fas fa-chart-line"></i> Vue Globale
+          <!-- Barre lateral unique debut -->
+        <aside class="sidebar">
+<div class="logo-container">
+    <div class="logo">
+        <img src="logo.png" alt="VOIR PLUS OPTIC Logo" class="logo-image">
+        <span>VOIR PLUS OPTIC</span>
+    </div>
+</div>
+            <nav class="menu">
+                <div class="menu-item">
+                    <a class="menu-link">
+                        <i class="fas fa-home"></i>
+                        <span>Tableau de bord</span>
+                        <i class="fas fa-chevron-down chevron"></i>
                     </a>
-                    <a href="javascript:void(0)" onclick="openLooker()">
-                        <i class="fas fa-chart-pie"></i> Statistiques
-                    </a>
+                    <div class="submenu">
+                        <a href="#" onclick="openVueGlobale()"><i class="fas fa-chart-line"></i> Vue Globale</a>
+                        <a href="#" onclick="openLooker()"><i class="fas fa-chart-pie"></i> Statistiques</a>
+                        
+                    </div>
                 </div>
-            </div>
 
-            <!-- Gestion des Ventes -->
-            <div class="menu-item active">
-                <a class="menu-link" href="javascript:void(0)" onclick="toggleMenu(this)">
-                    <i class="fas fa-shopping-cart"></i>
-                    <span>Gestion des Ventes</span>
-                    <i class="fas fa-chevron-down chevron"></i>
-                </a>
-                <div class="submenu">
-                    <a href="javascript:void(0)" onclick="openNewSale()">
-                        <i class="fas fa-plus-circle"></i> Nouvelle Vente
+                <div class="menu-item active">
+                    <a class="menu-link">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span>Gestion des Ventes</span>
+                        <i class="fas fa-chevron-down chevron"></i>
                     </a>
-                    <!-- RETIRER le div du loader du sous-menu -->
-                    <a href="javascript:void(0)" onclick="openDevis()">
-                        <i class="fas fa-file-invoice"></i> Proforma
-                    </a>
+                    <div class="submenu">
+                        <a href="#" onclick="openNewSale()"><i class="fas fa-plus-circle"></i> Nouvelle Vente</a>
+                        <div id="vente-loader" style="display:none;">
+    <div class="loader-spinner"></div>
+    <span id="vente-status">Chargement...</span>
+</div>
+
+                        <a href="#" onclick="openDevis()"><i class="fas fa-file-invoice"></i> Proforma</a>
+                    </div>
                 </div>
-            </div>
 
-            <!-- Gestion Stock -->
-            <div class="menu-item">
-                <a class="menu-link" href="javascript:void(0)" onclick="toggleMenu(this)">
-                    <i class="fas fa-boxes"></i>
-                    <span>Gestion Stock</span>
-                    <i class="fas fa-chevron-down chevron"></i>
-                </a>
-                <div class="submenu">
-                    <a href="javascript:void(0)" onclick="openProductEntryForm()">
-                        <i class="fas fa-plus"></i> Entrée Produit
+                <div class="menu-item">
+                    <a class="menu-link">
+                        <i class="fas fa-boxes"></i>
+                        <span>Gestion Stock</span>
+                        <i class="fas fa-chevron-down chevron"></i>
                     </a>
-                    <a href="javascript:void(0)" onclick="openListeProduit()">
-                        <i class="fas fa-glasses"></i> Liste des Produits
-                    </a>
+                    <div class="submenu">
+                        <a href="#" onclick="openProductEntryForm()"><i class="fas fa-plus"></i> Entrée Produit</a>
+                        <a href="#" onclick="openListeProduit()"><i class="fas fa-glasses"></i> Liste des Produits</a>
+                    </div>
                 </div>
-            </div>
 
-            <!-- Assurances -->
-            <div class="menu-item">
-                <a class="menu-link" href="javascript:void(0)" onclick="toggleMenu(this)">
-                    <i class="fas fa-shield-alt"></i>
-                    <span>Assurances</span>
-                    <i class="fas fa-chevron-down chevron"></i>
-                </a>
-                <div class="submenu">
-                    <a href="javascript:void(0)" onclick="openFacturation()">
-                        <i class="fas fa-truck"></i> Facturation
+                <div class="menu-item">
+                    <a class="menu-link">
+                        <i class="fas fa-shield-alt"></i>
+                        <span>Assurances</span>
+                        <i class="fas fa-chevron-down chevron"></i>
                     </a>
-                    <a href="javascript:void(0)" onclick="openPointFacturation()">
-                        <i class="fas fa-file-contract"></i> Point des Facturation
-                    </a>
+                    <div class="submenu">
+                       <a href="#" onclick="openFacturation()"><i class="fas fa-truck"></i> Facturation</a>
+                        <a href="#" onclick="openPointFacturation()"><i class="fas fa-file-contract"></i> Point des Facturation</a>
+                    </div>
                 </div>
-            </div>
 
-            <!-- Catalogue Produit -->
-            <div class="menu-item">
-                <a class="menu-link" href="javascript:void(0)" onclick="toggleMenu(this)">
-                    <i class="fas fa-boxes"></i>
-                    <span>Catalogue Produit</span>
-                    <i class="fas fa-chevron-down chevron"></i>
-                </a>
-                <div class="submenu">
-                    <a href="javascript:void(0)" onclick="openListeMonture()">
-                        <i class="fas fa-glasses"></i> Montures
+                <div class="menu-item">
+                    <a class="menu-link">
+                        <i class="fas fa-boxes"></i>
+                        <span>Catalogue Produit</span>
+                        <i class="fas fa-chevron-down chevron"></i>
                     </a>
-                    <a href="javascript:void(0)" onclick="openListeVerre('verre')">
-                        <i class="fas fa-eye"></i> Verres
-                    </a>
-                    <a href="javascript:void(0)" onclick="openCatalogueVerre('catalogueVerre')">
-                        <i class="fas fa-eye"></i> Catalogue Produit
-                    </a>
+                    <div class="submenu">
+                         <a href="#" onclick="openListeMonture()"><i class="fas fa-glasses"></i> Montures</a>
+                        <a href="#" onclick="openListeVerre('verre')"><i class="fas fa-eye"></i> Verres</a>
+                        <a href="#" onclick="openCatalogueVerre('catalogueVerre')"><i class="fas fa-eye"></i> Catalogue Produit</a>
+                    </div>
                 </div>
-            </div>
-
-            <!-- Gestion de Caisse - CORRIGÉ -->
-            <div class="menu-item">
-                <a class="menu-link" href="javascript:void(0)" onclick="toggleMenu(this)">
-                    <i class="fas fa-cash-register"></i>
-                    <span>Gestion de Caisse</span>
-                    <i class="fas fa-chevron-down chevron"></i>
-                </a>
-                <div class="submenu">
-                    <a href="javascript:void(0)" onclick="openEntreesJournal()">
-                        <i class="fas fa-sign-in-alt"></i> Journal des Entrées
+                <div class="menu-item">
+                    <a class="menu-link">
+                        <i class="fas fa-cash-register"></i>
+                        <span>Gestion de Caisse</span>
+                        <i class="fas fa-chevron-down chevron"></i>
                     </a>
-                    <a href="javascript:void(0)" onclick="openDepensesJournal()">
-                        <i class="fas fa-sign-out-alt"></i> Journal des Dépenses
-                    </a>
-                    
-                    <!-- SOUS-MENU SÉPARÉ pour les Caisses -->
-                    <div class="submenu-group">
-                        <a href="javascript:void(0)" class="submenu-header" onclick="toggleSubGroup(this)">
-                            <i class="fas fa-wallet"></i>
-                            <span>Caisses</span>
-                            <i class="fas fa-chevron-down chevron"></i>
+                    <div class="submenu">
+                        <a href="#" onclick="openEntreesJournal()">
+                            <i class="fas fa-sign-in-alt"></i> Journal des Entrées
                         </a>
-                        <div class="subsubmenu">
-                            <a href="javascript:void(0)" onclick="openCaisse('caisse1', 'Cotonou')">
-                                <i class="fas fa-cash-register"></i> Caisse Cotonou
+                        <a href="#" onclick="openDepensesJournal()">
+                            <i class="fas fa-sign-out-alt"></i> Journal des Dépenses
+                        </a>
+
+                        <!-- 🔹 Nouvelle section regroupée -->
+                        <div class="menu-item submenu-group">
+                            <a class="menu-link">
+                                <i class="fas fa-wallet"></i>
+                                <span>Caisses</span>
+                                <i class="fas fa-chevron-down chevron"></i>
                             </a>
-                            <a href="javascript:void(0)" onclick="openCaisse('caisse2', 'Calavi')">
-                                <i class="fas fa-cash-register"></i> Caisse Calavi
-                            </a>
+                            <div class="submenu">
+                                <a href="#" onclick="openCaisse('caisse1', 'Cotonou');">
+                                    <i class="fas fa-cash-register"></i> Caisse Cotonou
+                                </a>
+                                <a href="#" onclick="openCaisse('caisse2', 'Calavi');">
+                                    <i class="fas fa-cash-register"></i> Caisse Calavi
+                                </a>
+
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- Administration -->
-            <div class="menu-item">
-                <a class="menu-link" href="javascript:void(0)" onclick="toggleMenu(this)">
-                    <i class="fas fa-users-cog"></i>
-                    <span>Administration</span>
-                    <i class="fas fa-chevron-down chevron"></i>
-                </a>
-                <div class="submenu">
-                    <a href="javascript:void(0)" onclick="openAddUserForm()">
-                        <i class="fas fa-user-plus"></i> Ajouter un Utilisateur
+
+                <div class="menu-item">
+                    <a class="menu-link" onclick="toggleAdminMenu(event)">
+                        <i class="fas fa-users-cog"></i>
+                        <span>Administration</span>
+                        <i class="fas fa-chevron-down chevron"></i>
                     </a>
-                    <a href="javascript:void(0)" onclick="openBanque()">
-                        <i class="fas fa-university"></i> Journal Banque
-                    </a>
-                    <a href="javascript:void(0)" onclick="openJournalGrandCaisse()">
-                        <i class="fas fa-university"></i> Grande Caisse
-                    </a>
+                    <div class="submenu">
+                        <a href="#" onclick="openAddUserForm()"><i class="fas fa-user-plus"></i> Ajouter un Utilisateur</a>
+                        <a href="#" onclick="openBanque()"><i class="fas fa-university"></i> Journal Banque</a>
+                        <a href="#" onclick="openJournalGrandCaisse()"><i class="fas fa-university"></i> Grande Caisse</a>
+                    </div>
                 </div>
-            </div>
-        </nav>
-    </aside>
+            </nav>
+        </aside>
         <div class="main">
             <header class="header">
                 <div class="header-left">
