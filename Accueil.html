@@ -4490,132 +4490,167 @@ tr:hover {
 </style>
 </head>
 <body>
-    <div class="dashboard">
-          <!-- Barre lateral unique debut -->
-        <aside class="sidebar">
-<div class="logo-container">
-    <div class="logo">
-        <img src="logo.png" alt="VOIR PLUS OPTIC Logo" class="logo-image">
-        <span>VOIR PLUS OPTIC</span>
-    </div>
-</div>
-            <nav class="menu">
-                <div class="menu-item">
-                    <a class="menu-link">
-                        <i class="fas fa-home"></i>
-                        <span>Tableau de bord</span>
-                        <i class="fas fa-chevron-down chevron"></i>
+<div class="dashboard">
+    <!-- Barre latérale unique début -->
+    <aside class="sidebar">
+        <div class="logo-container">
+            <div class="logo">
+                <img src="logo.png" alt="VOIR PLUS OPTIC Logo" class="logo-image">
+                <span>VOIR PLUS OPTIC</span>
+            </div>
+        </div>
+        <nav class="menu">
+            <!-- Tableau de bord -->
+            <div class="menu-item">
+                <a class="menu-link" href="javascript:void(0)" onclick="toggleMenu(this)">
+                    <i class="fas fa-home"></i>
+                    <span>Tableau de bord</span>
+                    <i class="fas fa-chevron-down chevron"></i>
+                </a>
+                <div class="submenu">
+                    <a href="javascript:void(0)" onclick="openVueGlobale()">
+                        <i class="fas fa-chart-line"></i> Vue Globale
                     </a>
-                    <div class="submenu">
-                        <a href="#" onclick="openVueGlobale()"><i class="fas fa-chart-line"></i> Vue Globale</a>
-                        <a href="#" onclick="openLooker()"><i class="fas fa-chart-pie"></i> Statistiques</a>
-                        
-                    </div>
+                    <a href="javascript:void(0)" onclick="openLooker()">
+                        <i class="fas fa-chart-pie"></i> Statistiques
+                    </a>
                 </div>
+            </div>
 
-                <div class="menu-item active">
-                    <a class="menu-link">
-                        <i class="fas fa-shopping-cart"></i>
-                        <span>Gestion des Ventes</span>
-                        <i class="fas fa-chevron-down chevron"></i>
+            <!-- Gestion des Ventes -->
+            <div class="menu-item active">
+                <a class="menu-link" href="javascript:void(0)" onclick="toggleMenu(this)">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span>Gestion des Ventes</span>
+                    <i class="fas fa-chevron-down chevron"></i>
+                </a>
+                <div class="submenu">
+                    <a href="javascript:void(0)" onclick="openNewSale()">
+                        <i class="fas fa-plus-circle"></i> Nouvelle Vente
                     </a>
-                    <div class="submenu">
-                        <a href="#" onclick="openNewSale()"><i class="fas fa-plus-circle"></i> Nouvelle Vente</a>
-                        <div id="vente-loader" style="display:none;">
-    <div class="loader-spinner"></div>
-    <span id="vente-status">Chargement...</span>
-</div>
-
-                        <a href="#" onclick="openDevis()"><i class="fas fa-file-invoice"></i> Proforma</a>
-                    </div>
+                    <!-- RETIRER le div du loader du sous-menu -->
+                    <a href="javascript:void(0)" onclick="openDevis()">
+                        <i class="fas fa-file-invoice"></i> Proforma
+                    </a>
                 </div>
+            </div>
 
-                <div class="menu-item">
-                    <a class="menu-link">
-                        <i class="fas fa-boxes"></i>
-                        <span>Gestion Stock</span>
-                        <i class="fas fa-chevron-down chevron"></i>
+            <!-- Gestion Stock -->
+            <div class="menu-item">
+                <a class="menu-link" href="javascript:void(0)" onclick="toggleMenu(this)">
+                    <i class="fas fa-boxes"></i>
+                    <span>Gestion Stock</span>
+                    <i class="fas fa-chevron-down chevron"></i>
+                </a>
+                <div class="submenu">
+                    <a href="javascript:void(0)" onclick="openProductEntryForm()">
+                        <i class="fas fa-plus"></i> Entrée Produit
                     </a>
-                    <div class="submenu">
-                        <a href="#" onclick="openProductEntryForm()"><i class="fas fa-plus"></i> Entrée Produit</a>
-                        <a href="#" onclick="openListeProduit()"><i class="fas fa-glasses"></i> Liste des Produits</a>
-                    </div>
+                    <a href="javascript:void(0)" onclick="openListeProduit()">
+                        <i class="fas fa-glasses"></i> Liste des Produits
+                    </a>
                 </div>
+            </div>
 
-                <div class="menu-item">
-                    <a class="menu-link">
-                        <i class="fas fa-shield-alt"></i>
-                        <span>Assurances</span>
-                        <i class="fas fa-chevron-down chevron"></i>
+            <!-- Assurances -->
+            <div class="menu-item">
+                <a class="menu-link" href="javascript:void(0)" onclick="toggleMenu(this)">
+                    <i class="fas fa-shield-alt"></i>
+                    <span>Assurances</span>
+                    <i class="fas fa-chevron-down chevron"></i>
+                </a>
+                <div class="submenu">
+                    <a href="javascript:void(0)" onclick="openFacturation()">
+                        <i class="fas fa-truck"></i> Facturation
                     </a>
-                    <div class="submenu">
-                       <a href="#" onclick="openFacturation()"><i class="fas fa-truck"></i> Facturation</a>
-                        <a href="#" onclick="openPointFacturation()"><i class="fas fa-file-contract"></i> Point des Facturation</a>
-                    </div>
+                    <a href="javascript:void(0)" onclick="openPointFacturation()">
+                        <i class="fas fa-file-contract"></i> Point des Facturation
+                    </a>
                 </div>
+            </div>
 
-                <div class="menu-item">
-                    <a class="menu-link">
-                        <i class="fas fa-boxes"></i>
-                        <span>Catalogue Produit</span>
-                        <i class="fas fa-chevron-down chevron"></i>
+            <!-- Catalogue Produit -->
+            <div class="menu-item">
+                <a class="menu-link" href="javascript:void(0)" onclick="toggleMenu(this)">
+                    <i class="fas fa-boxes"></i>
+                    <span>Catalogue Produit</span>
+                    <i class="fas fa-chevron-down chevron"></i>
+                </a>
+                <div class="submenu">
+                    <a href="javascript:void(0)" onclick="openListeMonture()">
+                        <i class="fas fa-glasses"></i> Montures
                     </a>
-                    <div class="submenu">
-                         <a href="#" onclick="openListeMonture()"><i class="fas fa-glasses"></i> Montures</a>
-                        <a href="#" onclick="openListeVerre('verre')"><i class="fas fa-eye"></i> Verres</a>
-                        <a href="#" onclick="openCatalogueVerre('catalogueVerre')"><i class="fas fa-eye"></i> Catalogue Produit</a>
-                    </div>
+                    <a href="javascript:void(0)" onclick="openListeVerre('verre')">
+                        <i class="fas fa-eye"></i> Verres
+                    </a>
+                    <a href="javascript:void(0)" onclick="openCatalogueVerre('catalogueVerre')">
+                        <i class="fas fa-eye"></i> Catalogue Produit
+                    </a>
                 </div>
-                <div class="menu-item">
-                    <a class="menu-link">
-                        <i class="fas fa-cash-register"></i>
-                        <span>Gestion de Caisse</span>
-                        <i class="fas fa-chevron-down chevron"></i>
+            </div>
+
+            <!-- Gestion de Caisse - CORRIGÉ -->
+            <div class="menu-item">
+                <a class="menu-link" href="javascript:void(0)" onclick="toggleMenu(this)">
+                    <i class="fas fa-cash-register"></i>
+                    <span>Gestion de Caisse</span>
+                    <i class="fas fa-chevron-down chevron"></i>
+                </a>
+                <div class="submenu">
+                    <a href="javascript:void(0)" onclick="openEntreesJournal()">
+                        <i class="fas fa-sign-in-alt"></i> Journal des Entrées
                     </a>
-                    <div class="submenu">
-                        <a href="#" onclick="openEntreesJournal()">
-                            <i class="fas fa-sign-in-alt"></i> Journal des Entrées
+                    <a href="javascript:void(0)" onclick="openDepensesJournal()">
+                        <i class="fas fa-sign-out-alt"></i> Journal des Dépenses
+                    </a>
+                    
+                    <!-- SOUS-MENU SÉPARÉ pour les Caisses -->
+                    <div class="submenu-group">
+                        <a href="javascript:void(0)" class="submenu-header" onclick="toggleSubGroup(this)">
+                            <i class="fas fa-wallet"></i>
+                            <span>Caisses</span>
+                            <i class="fas fa-chevron-down chevron"></i>
                         </a>
-                        <a href="#" onclick="openDepensesJournal()">
-                            <i class="fas fa-sign-out-alt"></i> Journal des Dépenses
-                        </a>
-
-                        <!-- 🔹 Nouvelle section regroupée -->
-                        <div class="menu-item submenu-group">
-                            <a class="menu-link">
-                                <i class="fas fa-wallet"></i>
-                                <span>Caisses</span>
-                                <i class="fas fa-chevron-down chevron"></i>
+                        <div class="subsubmenu">
+                            <a href="javascript:void(0)" onclick="openCaisse('caisse1', 'Cotonou')">
+                                <i class="fas fa-cash-register"></i> Caisse Cotonou
                             </a>
-                            <div class="submenu">
-                                <a href="#" onclick="openCaisse('caisse1', 'Cotonou');">
-                                    <i class="fas fa-cash-register"></i> Caisse Cotonou
-                                </a>
-                                <a href="#" onclick="openCaisse('caisse2', 'Calavi');">
-                                    <i class="fas fa-cash-register"></i> Caisse Calavi
-                                </a>
-
-                            </div>
+                            <a href="javascript:void(0)" onclick="openCaisse('caisse2', 'Calavi')">
+                                <i class="fas fa-cash-register"></i> Caisse Calavi
+                            </a>
                         </div>
                     </div>
                 </div>
+            </div>
 
-
-                <div class="menu-item">
-                    <a class="menu-link" onclick="toggleAdminMenu(event)">
-                        <i class="fas fa-users-cog"></i>
-                        <span>Administration</span>
-                        <i class="fas fa-chevron-down chevron"></i>
+            <!-- Administration -->
+            <div class="menu-item">
+                <a class="menu-link" href="javascript:void(0)" onclick="toggleMenu(this)">
+                    <i class="fas fa-users-cog"></i>
+                    <span>Administration</span>
+                    <i class="fas fa-chevron-down chevron"></i>
+                </a>
+                <div class="submenu">
+                    <a href="javascript:void(0)" onclick="openAddUserForm()">
+                        <i class="fas fa-user-plus"></i> Ajouter un Utilisateur
                     </a>
-                    <div class="submenu">
-                        <a href="#" onclick="openAddUserForm()"><i class="fas fa-user-plus"></i> Ajouter un Utilisateur</a>
-                        <a href="#" onclick="openBanque()"><i class="fas fa-university"></i> Journal Banque</a>
-                        <a href="#" onclick="openJournalGrandCaisse()"><i class="fas fa-university"></i> Grande Caisse</a>
-                    </div>
+                    <a href="javascript:void(0)" onclick="openBanque()">
+                        <i class="fas fa-university"></i> Journal Banque
+                    </a>
+                    <a href="javascript:void(0)" onclick="openJournalGrandCaisse()">
+                        <i class="fas fa-university"></i> Grande Caisse
+                    </a>
                 </div>
-            </nav>
-        </aside>
+            </div>
+        </nav>
+    </aside>
 
+    <!-- Le loader doit être EN DEHORS de la sidebar -->
+    <div id="vente-loader" style="display:none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 9999;">
+        <div class="loader-spinner"></div>
+        <span id="vente-status">Chargement...</span>
+    </div>
+</div>
         <div class="main">
             <header class="header">
                 <div class="header-left">
