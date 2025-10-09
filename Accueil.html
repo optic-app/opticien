@@ -4534,7 +4534,7 @@ tr:hover {
                         <i class="fas fa-chevron-down chevron"></i>
                     </a>
                     <div class="submenu">
-                        <a href="#" onclick="openProductEntryForm()"><i class="fas fa-plus"></i> Entrée Produit</a>
+                        <a href="#" onclick="openFacturation()"><i class="fas fa-plus"></i> Entrée Produit</a>
                         <a href="#" onclick="openListeProduit()"><i class="fas fa-glasses"></i> Liste des Produits</a>
                     </div>
                 </div>
@@ -5577,6 +5577,20 @@ tr:hover {
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
 
  <script>
+
+function toggleAdminMenu(event) {
+    event.preventDefault(); // Empêche le lien de suivre #
+    
+    if (!hasAdminRights()) {
+        alert("⛔ Accès refusé");
+        return; // Bloque l'ouverture du menu
+    }
+
+    // ✅ Autorisé → toggle le sous-menu
+    const menuItem = event.currentTarget.closest('.menu-item');
+    const submenu = menuItem.querySelector('.submenu');
+    submenu.classList.toggle('open');
+}
 
 function openLooker() {
     if (!hasAdminRights()) {
@@ -9899,8 +9913,7 @@ try {
     logError(error.message);
     // Affichez aussi à l'utilisateur si nécessaire
 }
-</script>  
-    <script>
+
                 // Fonctions pour gérer la modale
 async function openDevis() {
     const modal = document.getElementById('proformaModal');
@@ -10421,10 +10434,7 @@ function numberToFrenchWords(number) {
     }
 }
 //fin proforma
-</script>
 
-    
-<script>
     // Variables globales
     let allClientsData = [];
     let filteredClients = [];
