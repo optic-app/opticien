@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>VOIR PLUS OPTIC - Optic'APP</title>
+    <title>Accuiel - Optic'APP</title>
         <!-- Favicon de base -->
     <link rel="icon" href="favicon.ico" type="image/x-icon">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -4749,8 +4749,6 @@ tr:hover {
         </div>
     </div>
 <div id="modal-container"></div>
-
-    <!-- Modale Proforma -->
     
 <div class="modal-overlay" id="proformaModal">
     <div class="modal-container">
@@ -5579,20 +5577,6 @@ tr:hover {
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
 
  <script>
-
-function toggleAdminMenu(event) {
-    event.preventDefault(); // Empêche le lien de suivre #
-    
-    if (!hasAdminRights()) {
-        alert("⛔ Accès refusé");
-        return; // Bloque l'ouverture du menu
-    }
-
-    // ✅ Autorisé → toggle le sous-menu
-    const menuItem = event.currentTarget.closest('.menu-item');
-    const submenu = menuItem.querySelector('.submenu');
-    submenu.classList.toggle('open');
-}
 
 function openLooker() {
     if (!hasAdminRights()) {
