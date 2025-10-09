@@ -4534,7 +4534,7 @@ tr:hover {
                         <i class="fas fa-chevron-down chevron"></i>
                     </a>
                     <div class="submenu">
-                        <a href="#" onclick="openFacturation()"><i class="fas fa-plus"></i> Entrée Produit</a>
+                        <a href="#" onclick="openProductEntryForm()"><i class="fas fa-plus"></i> Entrée Produit</a>
                         <a href="#" onclick="openListeProduit()"><i class="fas fa-glasses"></i> Liste des Produits</a>
                     </div>
                 </div>
@@ -8100,7 +8100,7 @@ let currentFilteredFactures = [];
 let filterTimeout;
 
 // Fonction principale pour ouvrir la gestion des facturations
-function openFacturation() {
+window.openFacturation = function() {
     const modalContainer = document.getElementById('modal-container');
     const modalHTML = `
         <div class="modal-overlay" id="facturationModal">
