@@ -5577,6 +5577,41 @@ tr:hover {
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
 
  <script>
+// CORRECTION DES FONCTIONS MANQUANTES
+document.addEventListener('DOMContentLoaded', function() {
+    // Liste de toutes vos fonctions qui doivent être globales
+    const globalFunctions = [
+        'openFacturation',
+        'openPointFacturation', 
+        'openListeMonture',
+        'openListeVerre',
+        'openCatalogueVerre',
+        'openEntreesJournal',
+        'openDepensesJournal',
+        'openCaisse',
+        'openAddUserForm',
+        'openBanque',
+        'openJournalGrandCaisse',
+        'openVueGlobale',
+        'openLooker',
+        'openNewSale',
+        'openDevis',
+        'openProductEntryForm',
+        'openListeProduit',
+        'openDepense'
+    ];
+    
+    // Vérifier et corriger chaque fonction
+    globalFunctions.forEach(funcName => {
+        if (typeof window[funcName] === 'undefined') {
+            console.warn(`Fonction ${funcName} non trouvée, création d'une fonction placeholder`);
+            window[funcName] = function() {
+                console.log(`Fonction ${funcName} appelée`);
+                alert(`La fonction ${funcName} n'est pas encore implémentée`);
+            };
+        }
+    });
+});
 
 function toggleAdminMenu(event) {
     event.preventDefault(); // Empêche le lien de suivre #
@@ -8100,7 +8135,8 @@ let currentFilteredFactures = [];
 let filterTimeout;
 
 // Fonction principale pour ouvrir la gestion des facturations
-window.openFacturation = function() {
+
+function openFacturation() {
     const modalContainer = document.getElementById('modal-container');
     const modalHTML = `
         <div class="modal-overlay" id="facturationModal">
