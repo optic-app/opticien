@@ -1,29 +1,9 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>Optic'App</title>
-
-    <!-- Manifest PWA -->
-    <link rel="manifest" href="manifest.json">
-
-    <!-- Service Worker -->
-    <script>
-      if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('service-worker.js')
-          .then(() => {
-            console.log('Service Worker enregistré');
-            // Redirection vers code.html après que le service worker est enregistré
-            window.location.href = 'code.html';
-          })
-          .catch((err) => console.log('Erreur Service Worker:', err));
-      } else {
-        // Si pas de service worker, redirection directe
-        window.location.href = 'code.html';
-      }
-    </script>
+    <meta http-equiv="refresh" content="0; url=code.html" />
 </head>
 <body>
-    <p>Chargement...</p>
+
 </body>
 </html>
