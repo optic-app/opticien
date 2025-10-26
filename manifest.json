@@ -1,36 +1,25 @@
 {
-  "name": "Optic'App",
-  "short_name": "Opl",
-  "description": "Logiciel Opticien - Optic'App",
-  "lang": "fr",
+  "background_color": "#ffffff",
   "dir": "ltr",
   "display": "standalone",
+  "name": "optic-app",
   "orientation": "any",
-  "background_color": "#ffffff",
-  "theme_color": "#4361ee",
-  "start_url": "/opticien/index.html",
-  "scope": "/opticien/",
-  "id": "opticapp",
+  "scope": "/",
+  "short_name": "optic-app.github",
+  "start_url": "/",
+  "theme_color": "#ffffff",
   "icons": [
     {
-      "src": "logo.png",
-      "sizes": "192x192",
-      "type": "image/png"
-    },
-    {
-      "src": "logo.png",
-      "sizes": "512x512",
-      "type": "image/png"
-    }
-  ],
-  "categories": ["business", "productivity"],
-  "shortcuts": [
-    {
-      "name": "Connexion",
-      "short_name": "Login",
-      "description": "Accéder à la page de connexion",
-      "url": "/opticien/code.html",
-      "icons": [{ "src": "logo.png", "sizes": "192x192" }]
+      "src": "https://optic-app.github.io/opticien/logoAppli.png",
+      "type": "image/x-icon",
+      "isSquare": false,
+      "isPng": false,
+      "isWebp": false,
+      "isJpg": false,
+      "width": 0,
+      "is512x512": false,
+      "is256x256": false,
+      "is192x192": false
     }
   ]
 }
