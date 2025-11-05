@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sélection de Domaine - VisioPro</title>
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #4361ee;
+            --primary-dark: #3a56d4;
+            --accent-color: #4895ef;
+            --danger-color: #ef4444;
+            --light-color: #f8fafc;
+            --dark-color: #1e293b;
+            --gray-color: #94a3b8;
+            --border-radius: 8px;
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, rgba(67, 97, 238, 0.1) 0%, rgba(72, 149, 239, 0.1) 100%), url("image.png") no-repeat center center fixed;
+            background-size: cover;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            transition: var(--transition);
+        }
+
+        .domain-container {
+            width: 100%;
+            max-width: 450px;
+            animation: fadeIn 0.5s ease-out;
+            transition: var(--transition);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .domain-box {
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            padding: 40px;
+            width: 100%;
+            position: relative;
+            overflow: hidden;
+            transition: var(--transition);
+        }
+
+        .domain-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .logo img {
+            height: 60px;
+            margin-bottom: 10px;
+        }
+
+        .logo h1 {
+            color: var(--dark-color);
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .logo p {
+            color: var(--gray-color);
+            font-size: 0.9rem;
+            margin-top: 5px;
+        }
+
+        .domain-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .domain-header h2 {
+            color: var(--dark-color);
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .domain-header p {
+            color: var(--gray-color);
+            font-size: 0.9rem;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .input-group label {
+            display: block;
+            color: var(--dark-color);
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+
+        .input-field {
+            display: flex;
+            align-items: center;
+            border: 1px solid #e2e8f0;
+            border-radius: var(--border-radius);
+            padding: 0 15px;
+            transition: var(--transition);
+        }
+
+        .input-field:focus-within {
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 3px rgba(72, 149, 239, 0.2);
+        }
+
+        .input-field i {
+            color: var(--gray-color);
+            font-size: 1rem;
+            margin-right: 10px;
+        }
+
+        .input-field input {
+            flex: 1;
+            border: none;
+            outline: none;
+            padding: 12px 0;
+            font-size: 0.95rem;
+            color: var(--dark-color);
+            background: transparent;
+        }
+
+        .input-field input::placeholder {
+            color: var(--gray-color);
+            opacity: 0.7;
+        }
+
+        .domain-button {
+            width: 100%;
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            color: white;
+            padding: 14px;
+            font-size: 1rem;
+            font-weight: 600;
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: var(--transition);
+            margin-bottom: 20px;
+        }
+
+        .domain-button:hover {
+            background: linear-gradient(135deg, var(--primary-dark), var(--accent-color));
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(67, 97, 238, 0.3);
+        }
+
+        .domain-button:active {
+            transform: translateY(0);
+        }
+
+        #message {
+            text-align: center;
+            margin-top: 15px;
+            font-size: 0.9rem;
+            padding: 10px;
+            border-radius: var(--border-radius);
+            display: none;
+        }
+
+        .error-message {
+            background-color: rgba(239, 68, 68, 0.1);
+            color: var(--danger-color);
+        }
+
+        .success-message {
+            background-color: rgba(74, 222, 128, 0.1);
+            color: #16a34a;
+        }
+
+        .back-link {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .back-link a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: var(--transition);
+        }
+
+        .back-link a:hover {
+            text-decoration: underline;
+        }
+
+        /* Styles pour l'adaptation mobile avec clavier */
+        body.keyboard-visible {
+            align-items: flex-start;
+            padding-top: 20px;
+        }
+
+        body.keyboard-visible .domain-container {
+            margin-top: 20px;
+            max-width: 95%;
+        }
+
+        body.keyboard-visible .domain-box {
+            padding: 25px 20px;
+            transform: scale(0.98);
+        }
+
+        /* Responsive */
+        @media (max-width: 480px) {
+            .domain-box {
+                padding: 30px 20px;
+            }
+            
+            .logo img {
+                height: 50px;
+            }
+            
+            .domain-header h2 {
+                font-size: 1.3rem;
+            }
+
+            /* Ajustements supplémentaires pour très petits écrans */
+            @media (max-height: 700px) {
+                body.keyboard-visible {
+                    padding-top: 10px;
+                }
+                
+                body.keyboard-visible .domain-container {
+                    margin-top: 10px;
+                }
+                
+                .domain-box {
+                    padding: 20px 15px;
+                }
+                
+                .logo {
+                    margin-bottom: 20px;
+                }
+                
+                .logo img {
+                    height: 40px;
+                }
+                
+                .input-group {
+                    margin-bottom: 15px;
+                }
+            }
+        }
+
+        /* Animation for the domain box */
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+
+        .domain-box {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        /* Animation de chargement */
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 8px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="domain-container">
+        <div class="domain-box">
+            <div class="logo">
+                <img src="logoAppli.png" alt="VisioPro">
+                <h1>VisioPro</h1>
+            </div>
+            
+            <div class="domain-header">
+                <h2>Sélectionnez votre domaine</h2>
+                <p>Entrez le nom de votre domaine pour accéder à votre espace</p>
+            </div>
+            
+            <form id="domain-form">
+                <div class="input-group">
+                    <label for="domain">Nom de domaine</label>
+                    <div class="input-field">
+                        <i class="fas fa-globe"></i>
+                        <input type="text" id="domain" placeholder="Entrez votre nom de domaine" required>
+                    </div>
+                </div>
+                
+                <button type="submit" class="domain-button">
+                    <i class="fas fa-arrow-right"></i> ACCÉDER AU DOMAINE
+                </button>
+                
+                <div id="message"></div>
+            </form>
+            
+        </div>
+    </div>
+
+    <script>
+        const form = document.getElementById('domain-form');
+        const message = document.getElementById('message');
+        const domainInput = document.getElementById('domain');
+        const body = document.body;
+        const domainContainer = document.querySelector('.domain-container');
+
+        // Détection de l'apparition du clavier sur mobile
+        function setupKeyboardDetection() {
+            // Hauteur initiale de la fenêtre
+            let initialWindowHeight = window.innerHeight;
+            
+            // Écouter les changements de taille de la fenêtre
+            window.addEventListener('resize', function() {
+                const newWindowHeight = window.innerHeight;
+                const heightDifference = initialWindowHeight - newWindowHeight;
+                
+                // Si la hauteur a diminué significativement, on suppose que le clavier est visible
+                if (heightDifference > 100) {
+                    body.classList.add('keyboard-visible');
+                } else {
+                    body.classList.remove('keyboard-visible');
+                }
+            });
+            
+            // Écouter le focus sur les champs de saisie pour les appareils mobiles
+            domainInput.addEventListener('focus', function() {
+                if ('ontouchstart' in window || navigator.maxTouchPoints) {
+                    // C'est un appareil tactile, on ajuste la position
+                    setTimeout(() => {
+                        body.classList.add('keyboard-visible');
+                        
+                        // Scroll supplémentaire pour s'assurer que le champ est visible
+                        this.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }, 300);
+                }
+            });
+            
+            domainInput.addEventListener('blur', function() {
+                setTimeout(() => {
+                    body.classList.remove('keyboard-visible');
+                }, 200);
+            });
+        }
+
+        // Form submission
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const domain = domainInput.value.trim().toLowerCase();
+
+            console.log('🌐 Tentative d\'accès au domaine:', domain);
+
+            // Show loading state
+            const submitBtn = form.querySelector('button[type="submit"]');
+            const originalBtnText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<span class="loading-spinner"></span> Vérification du domaine...';
+            submitBtn.disabled = true;
+
+            // Clear previous messages
+            message.style.display = 'none';
+
+            const timestamp = new Date().getTime();
+            const url = `https://script.google.com/macros/s/AKfycbzFmMSBTBdw8_DcCC1R0Oice_ecTCrggK4Gp59elsQSwhwdRjuuweo18_z79nTZUv6pgA/exec?action=checkdomain&domain=${encodeURIComponent(domain)}&_=${timestamp}`;
+            
+            console.log('🌐 URL appelée:', url);
+
+            fetch(url)
+                .then(res => {
+                    console.log('📡 Statut HTTP:', res.status, res.statusText);
+                    return res.json();
+                })
+                .then(data => {
+                    console.log('📨 Données brutes reçues:', data);
+                    
+                    if (data.success) {
+                        console.log('✅ Domaine trouvé:', domain);
+                        console.log('✅ accés:', url);
+                        message.textContent = 'Domaine trouvé ! Redirection en cours...';
+                        message.className = 'success-message';
+                        message.style.display = 'block';
+
+                        // Save domain in session storage
+                        sessionStorage.setItem("currentDomain", domain);
+                        
+                        // Redirect to the domain URL
+                        setTimeout(() => {
+                            window.location.href = data.data.url;
+                        }, 1500);
+                    } else {
+                        console.log('❌ Domaine non trouvé:', domain);
+                        message.textContent = data.message || 'Domaine non trouvé. Veuillez vérifier le nom et réessayer.';
+                        message.className = 'error-message';
+                        message.style.display = 'block';
+                        
+                        // Add shake animation to form
+                        form.classList.add('shake');
+                        setTimeout(() => {
+                            form.classList.remove('shake');
+                        }, 500);
+                    }
+                })
+                .catch(error => {
+                    console.error('💥 Erreur fetch:', error);
+                    message.textContent = "Erreur de vérification. Veuillez réessayer plus tard.";
+                    message.className = 'error-message';
+                    message.style.display = 'block';
+                })
+                .finally(() => {
+                    submitBtn.innerHTML = originalBtnText;
+                    submitBtn.disabled = false;
+                });
+        });
+
+        // Add shake animation CSS
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes shake {
+                0%, 100% { transform: translateX(0); }
+                10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+                20%, 40%, 60%, 80% { transform: translateX(5px); }
+            }
+            .shake {
+                animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
+            }
+        `;
+        document.head.appendChild(style);
+        
+        // Initialiser la détection du clavier
+        setupKeyboardDetection();
+    </script>
+</body>
+</html>
