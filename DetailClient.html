@@ -1562,6 +1562,90 @@
         height: 20px;
     }
 }
+
+/* Styles responsifs pour les modales */
+@media (max-width: 768px) {
+    .dialog-card {
+        width: 95% !important;
+        margin: 20px 10px;
+        max-height: 85vh !important;
+    }
+    
+    .dialog-body {
+        padding: 1rem;
+    }
+    
+    .dialog-footer {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .dialog-footer .btn {
+        width: 100%;
+        margin: 0;
+    }
+    
+    /* Empêcher le zoom sur iOS */
+    input, textarea, select {
+        font-size: 16px !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .dialog-card {
+        width: 98% !important;
+        margin: 10px 5px;
+        max-height: 90vh !important;
+    }
+    
+    .dialog-header {
+        padding: 1rem;
+    }
+    
+    .dialog-title {
+        font-size: 1.1rem;
+    }
+    
+    .dialog-body {
+        padding: 0.75rem;
+    }
+    
+    .form-control {
+        padding: 12px 10px;
+    }
+    
+    /* Assurer que les boutons sont toujours visibles */
+    .dialog-footer {
+        position: sticky;
+        bottom: 0;
+        background: white;
+        padding: 15px;
+        border-top: 1px solid var(--gray-light);
+        margin-top: auto;
+    }
+}
+
+/* Styles pour les petits écrans en mode paysage */
+@media (max-height: 500px) {
+    .dialog-card {
+        max-height: 80vh !important;
+    }
+    
+    .dialog-body {
+        padding: 0.5rem;
+    }
+}
+
+/* Amélioration du scroll sur mobile */
+.dialog-card {
+    -webkit-overflow-scrolling: touch; /* Scroll fluide sur iOS */
+}
+
+/* Focus visible pour l'accessibilité */
+.form-control:focus {
+    outline: 2px solid var(--primary-color);
+    outline-offset: 2px;
+}
     </style>
 </head>
 <body>
@@ -2294,7 +2378,7 @@ async function loadClientData(clientId) {
         // Ajouter les styles CSS pour le loader
         addLoaderStyles();
         
-        const apiUrl = `https://script.google.com/macros/s/AKfycbwBib7zOu3wzcq0GgxlV0B7Tz_knyruc9tonovn5okGIclgpr6ZKtcgXIJ-26hpNOTeqg/exec?action=getClientDetails&clientId=${encodeURIComponent(clientId)}`;
+        const apiUrl = `https://script.google.com/macros/s/AKfycbzcgbKkkfBZgxlarLyLnsXy6sHpQBWox33RXi_W_DRwhM-fAqTvAWO5tkvBZnRcdxt4aQ/exec?action=getClientDetails&clientId=${encodeURIComponent(clientId)}`;
         console.log("URL de l'API:", apiUrl);
         
         const response = await fetch(apiUrl);
@@ -2448,7 +2532,7 @@ async function printClientDetails() {
         showLoadingIndicator('Génération du PDF en cours...');
 
         // 1. D'abord, envoyer les données au serveur pour créer le reçu
-        const apiUrl = "https://script.google.com/macros/s/AKfycbwBib7zOu3wzcq0GgxlV0B7Tz_knyruc9tonovn5okGIclgpr6ZKtcgXIJ-26hpNOTeqg/exec?action=addrecu";
+        const apiUrl = "https://script.google.com/macros/s/AKfycbzcgbKkkfBZgxlarLyLnsXy6sHpQBWox33RXi_W_DRwhM-fAqTvAWO5tkvBZnRcdxt4aQ/exec?action=addrecu";
         
         console.log("📤 Envoi des données au serveur...");
         
@@ -2471,7 +2555,7 @@ async function printClientDetails() {
         await new Promise(resolve => setTimeout(resolve, 2000));
 
         // 3. Récupérer le lien du PDF généré - URL FIXE
-        const pdfUrl = "https://script.google.com/macros/s/AKfycbwBib7zOu3wzcq0GgxlV0B7Tz_knyruc9tonovn5okGIclgpr6ZKtcgXIJ-26hpNOTeqg/exec?action=getrecucaissepdf";
+        const pdfUrl = "https://script.google.com/macros/s/AKfycbzcgbKkkfBZgxlarLyLnsXy6sHpQBWox33RXi_W_DRwhM-fAqTvAWO5tkvBZnRcdxt4aQ/exec?action=getrecucaissepdf";
         
         console.log("📥 Récupération du PDF depuis:", pdfUrl);
         
@@ -2621,7 +2705,7 @@ function showComplementDialog() {
         // Impossible d'ajouter un complément
         const modalHTML = `
             <div class="dialog-overlay" id="complement-dialog">
-                <div class="dialog-card">
+                <div class="dialog-card" style="max-height: 90vh; overflow-y: auto;">
                     <div class="dialog-header">
                         <h3 class="dialog-title">Ajout de complément</h3>
                         <button class="dialog-close" onclick="closeModal()">&times;</button>
@@ -2657,15 +2741,13 @@ function showComplementDialog() {
         } else if (complement2 === 0) {
             paymentType = 'Complement 2';
         } else {
-            // Tous les compléments sont remplis, on ajoute à Complement 2
             paymentType = 'Complement 2 (Addition)';
-            // On peut ajouter au complément 2 existant
             maxAmount = resteAPayer;
         }
 
         const modalHTML = `
             <div class="dialog-overlay" id="complement-dialog">
-                <div class="dialog-card">
+                <div class="dialog-card" style="max-height: 90vh; overflow-y: auto;">
                     <div class="dialog-header">
                         <h3 class="dialog-title">Ajout de complément</h3>
                         <button class="dialog-close" onclick="closeModal()">&times;</button>
@@ -2725,11 +2807,11 @@ function showComplementDialog() {
                             <div id="complement-message" class="form-message"></div>
                         </form>
                     </div>
-                    <div class="dialog-footer">
-                        <button type="button" class="btn btn-secondary" onclick="closeModal()">
+                    <div class="dialog-footer" style="flex-wrap: wrap; gap: 10px;">
+                        <button type="button" class="btn btn-secondary" onclick="closeModal()" style="flex: 1; min-width: 120px;">
                             Annuler
                         </button>
-                        <button type="button" class="btn btn-primary" onclick="submitComplementForm()" id="submitComplementBtn">
+                        <button type="button" class="btn btn-primary" onclick="submitComplementForm()" id="submitComplementBtn" style="flex: 1; min-width: 120px;">
                             <i class="fas fa-check"></i> Enregistrer ${paymentType}
                         </button>
                     </div>
@@ -2745,12 +2827,66 @@ function showComplementDialog() {
         
         // Initialiser la validation
         validateComplementAmount(document.getElementById('complementAmount'));
+        
+        // Gestion du clavier virtuel sur mobile
+        setupMobileKeyboardHandling();
     }
     
     // Afficher avec animation
     setTimeout(() => {
-        document.getElementById('complement-dialog').classList.add('active');
+        const dialog = document.getElementById('complement-dialog');
+        if (dialog) {
+            dialog.classList.add('active');
+            // Focus sur le champ de montant
+            const amountInput = document.getElementById('complementAmount');
+            if (amountInput) {
+                setTimeout(() => amountInput.focus(), 300);
+            }
+        }
     }, 10);
+}
+
+// Gestion du clavier virtuel sur mobile
+function setupMobileKeyboardHandling() {
+    const modal = document.getElementById('complement-dialog');
+    if (!modal) return;
+    
+    const inputs = modal.querySelectorAll('input, textarea');
+    
+    inputs.forEach(input => {
+        // Empêcher le zoom automatique sur iOS
+        input.addEventListener('focus', function() {
+            this.style.fontSize = '16px'; // Empêche le zoom sur iOS
+        });
+        
+        // Recentrer la modale lorsque l'input est en focus
+        input.addEventListener('focus', function() {
+            if (window.innerHeight < 600) { // Petit écran
+                setTimeout(() => {
+                    this.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }, 300);
+            }
+        });
+    });
+    
+    // Ajuster la hauteur de la modale quand le clavier apparaît
+    window.addEventListener('resize', function() {
+        adjustModalForKeyboard();
+    });
+}
+
+function adjustModalForKeyboard() {
+    const modalCard = document.querySelector('#complement-dialog .dialog-card');
+    if (!modalCard) return;
+    
+    const viewportHeight = window.innerHeight;
+    
+    if (viewportHeight < 500) { // Clavier probablement ouvert
+        modalCard.style.maxHeight = '70vh';
+        modalCard.style.overflowY = 'auto';
+    } else {
+        modalCard.style.maxHeight = '90vh';
+    }
 }
 
 // Validation du montant du complément
@@ -2791,9 +2927,9 @@ async function submitComplementForm() {
         return;
     }
     
-    // Validation supplémentaire du montant
     const amount = parseFloat(document.getElementById('complementAmount').value);
     const maxAmount = parseFloat(document.getElementById('complementAmount').max);
+    const paymentType = document.getElementById('paymentType').value;
     
     if (amount > maxAmount) {
         formMessage.textContent = `Le montant ne peut pas dépasser ${maxAmount.toLocaleString('fr-FR')} FCFA`;
@@ -2804,18 +2940,30 @@ async function submitComplementForm() {
     const username = sessionStorage.getItem("utilisateur") || localStorage.getItem("utilisateur");
     const clientName = document.getElementById('client-name').textContent;
     const agency = document.getElementById('agency').textContent;
-    const paymentType = document.getElementById('paymentType').value;
+    
+    // CALCUL FINAL DU MONTANT COTÉ CLIENT
+    let finalAmount = amount;
+    
+    if (paymentType === 'Complement 2 (Addition)') {
+        // Récupérer le complement2 actuel depuis l'interface
+        const currentComplement2 = parseFloat(document.getElementById('complement2-amount').textContent.replace(/[^\d,]/g, '').replace(',', '.')) || 0;
+        // Calculer le nouveau total
+        finalAmount = currentComplement2 + amount;
+        
+        console.log(`Complement Addition: ${currentComplement2} + ${amount} = ${finalAmount}`);
+    }
     
     const complementData = {
         action: 'addComplement',
         clientId: document.getElementById('clientId').value,
-        amount: amount,
+        amount: finalAmount, // ENVOYER LE MONTANT FINAL CALCULÉ
         date: document.getElementById('complementDate').value,
         notes: document.getElementById('complementNotes').value.trim(),
         utilisateur: username,
         clientName: clientName,
         agence: agency,
         paymentType: paymentType,
+        originalAmount: amount, // Garder le montant original pour référence
         maxAmount: maxAmount
     };
 
@@ -2824,7 +2972,7 @@ async function submitComplementForm() {
     submitButton.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Enregistrement...';
 
     try {
-        const apiUrl = "https://script.google.com/macros/s/AKfycbwBib7zOu3wzcq0GgxlV0B7Tz_knyruc9tonovn5okGIclgpr6ZKtcgXIJ-26hpNOTeqg/exec?action=addComplement";
+        const apiUrl = "https://script.google.com/macros/s/AKfycbzcgbKkkfBZgxlarLyLnsXy6sHpQBWox33RXi_W_DRwhM-fAqTvAWO5tkvBZnRcdxt4aQ/exec?action=addComplement";
 
         const response = await fetch(apiUrl, {
             method: 'POST',
@@ -2838,10 +2986,8 @@ async function submitComplementForm() {
         formMessage.textContent = `✅ ${paymentType} enregistré avec succès !`;
         formMessage.classList.add('success');
         
-        // Fermer la modale après un délai
         setTimeout(() => {
             closeModal();
-            // Recharger les données du client pour mettre à jour l'affichage
             const clientId = complementData.clientId;
             if (typeof loadClientData === 'function') {
                 loadClientData(clientId);
@@ -2856,11 +3002,12 @@ async function submitComplementForm() {
         submitButton.innerHTML = '<i class="fas fa-check"></i> Enregistrer';
     }
 }
-
 function closeModal() {
     const modal = document.getElementById('complement-dialog');
     if (modal) {
         modal.classList.remove('active');
+        // Réinitialiser le scroll
+        document.body.style.overflow = '';
         setTimeout(() => {
             document.getElementById('modal-container').innerHTML = '';
         }, 300);
@@ -2979,7 +3126,7 @@ function updateStatusBadge(status) {
 async function loadEtuiReferences() {
     try {
         console.log('[loadEtuiReferences] Début du chargement des références');
-        const apiUrl = 'https://script.google.com/macros/s/AKfycbwBib7zOu3wzcq0GgxlV0B7Tz_knyruc9tonovn5okGIclgpr6ZKtcgXIJ-26hpNOTeqg/exec?action=catalogue';
+        const apiUrl = 'https://script.google.com/macros/s/AKfycbzcgbKkkfBZgxlarLyLnsXy6sHpQBWox33RXi_W_DRwhM-fAqTvAWO5tkvBZnRcdxt4aQ/exec?action=catalogue';
         
         console.log('[loadEtuiReferences] URL appelée:', apiUrl);
         const response = await fetch(apiUrl);
@@ -3242,7 +3389,7 @@ async function updateDealStatus(newStatus, deliveryInfo = null) {
     }
 
     try {
-        const apiUrl = "https://script.google.com/macros/s/AKfycbwBib7zOu3wzcq0GgxlV0B7Tz_knyruc9tonovn5okGIclgpr6ZKtcgXIJ-26hpNOTeqg/exec?action=updateDealStatus";
+        const apiUrl = "https://script.google.com/macros/s/AKfycbzcgbKkkfBZgxlarLyLnsXy6sHpQBWox33RXi_W_DRwhM-fAqTvAWO5tkvBZnRcdxt4aQ/exec?action=updateDealStatus";
         
         console.log('[updateDealStatus] Envoi des données:', statusData);
         
@@ -3569,7 +3716,7 @@ async function saveCallLog() {
     saveButton.disabled = true;
 
     try {
-        const apiUrl = "https://script.google.com/macros/s/AKfycbwBib7zOu3wzcq0GgxlV0B7Tz_knyruc9tonovn5okGIclgpr6ZKtcgXIJ-26hpNOTeqg/exec?action=logCall";
+        const apiUrl = "https://script.google.com/macros/s/AKfycbzcgbKkkfBZgxlarLyLnsXy6sHpQBWox33RXi_W_DRwhM-fAqTvAWO5tkvBZnRcdxt4aQ/exec?action=logCall";
         
         const response = await fetch(apiUrl, {
             method: 'POST',
@@ -3628,7 +3775,7 @@ function initializeCallSystem() {
     }
     
     // Vérifier les appels en attente au chargement de la page
-    setTimeout(openAutoCallLog, 1000);
+    //setTimeout(openAutoCallLog, 1000);
     
     // Configurer la fermeture des modales en cliquant à l'extérieur
     setupModalCloseHandlers();
@@ -3906,6 +4053,7 @@ style.textContent = `
 document.head.appendChild(style);
 </script>
 <!-- Modal de confirmation d'appel -->
+<!-- Modal de confirmation d'appel -->
 <div class="call-modal" id="callConfirmationModal">
     <div class="modal-dialog">
         <div class="modal-header">
@@ -3968,5 +4116,10 @@ document.head.appendChild(style);
         </div>
     </div>
 </div>
+
+<!-- Bouton d'appel mobile -->
+<button class="mobile-call-btn" id="mobileCallBtn" style="display: none;">
+    <i class="fas fa-phone"></i>
+</button>
 </body>
 </html>
