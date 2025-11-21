@@ -14,13 +14,12 @@
             --accent-color: #4895ef;
             --success-color: #10b981;
             --danger-color: #ef4444;
-            --warning-color: #f59e0b;
             --light-color: #f8fafc;
             --dark-color: #1e293b;
             --gray-color: #94a3b8;
-            --border-radius: 12px;
+            --border-radius: 16px;
             --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+            --shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.15);
         }
 
         * {
@@ -42,7 +41,6 @@
             align-items: center;
             min-height: 100vh;
             padding: 20px;
-            transition: var(--transition);
         }
 
         .domain-container {
@@ -54,24 +52,24 @@
         @keyframes slideUp {
             from { 
                 opacity: 0; 
-                transform: translateY(30px) scale(0.95); 
+                transform: translateY(30px); 
             }
             to { 
                 opacity: 1; 
-                transform: translateY(0) scale(1); 
+                transform: translateY(0); 
             }
         }
 
         .domain-box {
             background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(20px);
             border-radius: var(--border-radius);
             box-shadow: var(--shadow);
             padding: 40px;
             width: 100%;
             position: relative;
             overflow: hidden;
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
         }
 
         .domain-box::before {
@@ -81,53 +79,38 @@
             left: 0;
             right: 0;
             height: 4px;
-            background: linear-gradient(90deg, var(--primary-color), var(--accent-color), var(--success-color));
-            background-size: 200% 100%;
-            animation: shimmer 3s ease-in-out infinite;
-        }
-
-        @keyframes shimmer {
-            0%, 100% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
+            background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
         }
 
         .logo {
             text-align: center;
             margin-bottom: 30px;
-            animation: fadeIn 0.8s ease-out 0.2s both;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-10px); }
-            to { opacity: 1; transform: translateY(0); }
         }
 
         .logo img {
-            height: 65px;
+            height: 70px;
             margin-bottom: 12px;
-            transition: var(--transition);
         }
 
         .logo h1 {
             color: var(--dark-color);
-            font-size: 1.6rem;
+            font-size: 1.8rem;
             font-weight: 700;
             background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
+            margin-bottom: 5px;
         }
 
         .logo p {
             color: var(--gray-color);
             font-size: 0.9rem;
-            margin-top: 8px;
         }
 
         /* Écran d'accès automatique */
         .auto-access {
             text-align: center;
-            animation: fadeIn 0.6s ease-out both;
         }
 
         .auto-access-icon {
@@ -151,7 +134,7 @@
 
         .auto-access h2 {
             color: var(--dark-color);
-            font-size: 1.5rem;
+            font-size: 1.6rem;
             font-weight: 600;
             margin-bottom: 10px;
         }
@@ -168,26 +151,10 @@
             gap: 10px;
             background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
             color: white;
-            padding: 12px 20px;
+            padding: 12px 24px;
             border-radius: 25px;
             font-weight: 600;
             margin: 15px 0;
-            animation: bounceIn 0.8s ease-out 0.5s both;
-        }
-
-        @keyframes bounceIn {
-            0% { 
-                opacity: 0; 
-                transform: scale(0.3) translateY(20px); 
-            }
-            50% { 
-                opacity: 1; 
-                transform: scale(1.05) translateY(-5px); 
-            }
-            100% { 
-                opacity: 1; 
-                transform: scale(1) translateY(0); 
-            }
         }
 
         .progress-container {
@@ -204,7 +171,7 @@
             background: linear-gradient(90deg, var(--success-color), #34d399);
             border-radius: 3px;
             width: 0%;
-            animation: progress 2.5s ease-in-out;
+            animation: progress 2s ease-in-out;
         }
 
         @keyframes progress {
@@ -216,12 +183,13 @@
             background: transparent;
             color: var(--gray-color);
             border: 1px solid #e2e8f0;
-            padding: 10px 20px;
+            padding: 12px 24px;
             border-radius: var(--border-radius);
             font-size: 0.9rem;
             cursor: pointer;
             transition: var(--transition);
             margin-top: 10px;
+            font-weight: 500;
         }
 
         .cancel-btn:hover {
@@ -230,147 +198,29 @@
             border-color: var(--gray-color);
         }
 
-        /* Mode Accès Rapide */
-        .quick-access {
-            animation: fadeIn 0.6s ease-out 0.4s both;
-        }
-
-        .welcome-badge {
-            background: linear-gradient(135deg, var(--success-color), #34d399);
-            color: white;
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            margin-bottom: 15px;
-        }
-
-        .domain-card {
-            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
-            color: white;
-            border-radius: var(--border-radius);
-            padding: 25px;
-            margin-bottom: 20px;
-            cursor: pointer;
-            transition: var(--transition);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .domain-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-            transition: left 0.6s;
-        }
-
-        .domain-card:hover::before {
-            left: 100%;
-        }
-
-        .domain-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 15px 30px rgba(67, 97, 238, 0.3);
-        }
-
-        .domain-card-content {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .domain-icon {
-            width: 50px;
-            height: 50px;
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.3rem;
-        }
-
-        .domain-info h3 {
-            font-size: 1.2rem;
-            font-weight: 600;
-            margin-bottom: 4px;
-        }
-
-        .domain-info p {
-            font-size: 0.85rem;
-            opacity: 0.9;
-        }
-
-        .quick-actions {
-            display: flex;
-            gap: 10px;
-            margin-top: 15px;
-        }
-
-        .action-btn {
-            flex: 1;
-            padding: 10px;
-            border: none;
-            border-radius: var(--border-radius);
-            background: rgba(255, 255, 255, 0.2);
-            color: white;
-            font-size: 0.8rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: var(--transition);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-        }
-
-        .action-btn:hover {
-            background: rgba(255, 255, 255, 0.3);
-            transform: translateY(-1px);
-        }
-
         /* Mode Sélection */
         .domain-selection {
-            animation: fadeIn 0.6s ease-out both;
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
 
         .selection-header {
-            display: flex;
-            align-items: center;
-            justify-content: between;
             margin-bottom: 25px;
         }
 
         .selection-header h2 {
             color: var(--dark-color);
-            font-size: 1.4rem;
+            font-size: 1.5rem;
             font-weight: 600;
-        }
-
-        .back-btn {
-            background: none;
-            border: none;
-            color: var(--primary-color);
-            font-size: 1rem;
-            cursor: pointer;
-            padding: 8px;
-            border-radius: 50%;
-            transition: var(--transition);
-        }
-
-        .back-btn:hover {
-            background: rgba(67, 97, 238, 0.1);
+            text-align: center;
         }
 
         .input-group {
-            margin-bottom: 20px;
+            margin-bottom: 25px;
         }
 
         .input-label {
@@ -378,9 +228,9 @@
             align-items: center;
             gap: 8px;
             color: var(--dark-color);
-            font-size: 0.9rem;
+            font-size: 0.95rem;
             font-weight: 500;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
         }
 
         .input-field {
@@ -395,8 +245,7 @@
 
         .input-field:focus-within {
             border-color: var(--accent-color);
-            box-shadow: 0 0 0 3px rgba(72, 149, 239, 0.1);
-            transform: translateY(-1px);
+            box-shadow: 0 0 0 3px rgba(72, 149, 239, 0.15);
         }
 
         .input-field i {
@@ -408,8 +257,8 @@
             flex: 1;
             border: none;
             outline: none;
-            padding: 14px 12px;
-            font-size: 0.95rem;
+            padding: 16px 12px;
+            font-size: 1rem;
             color: var(--dark-color);
             background: transparent;
         }
@@ -418,7 +267,7 @@
             width: 100%;
             background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
             color: white;
-            padding: 15px;
+            padding: 16px;
             font-size: 1rem;
             font-weight: 600;
             border: none;
@@ -437,119 +286,6 @@
             box-shadow: 0 8px 20px rgba(67, 97, 238, 0.3);
         }
 
-        .domain-button:active {
-            transform: translateY(0);
-        }
-
-        /* Historique intelligent */
-        .smart-history {
-            margin-top: 25px;
-            border-top: 1px solid #f1f5f9;
-            padding-top: 20px;
-        }
-
-        .history-toggle {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            cursor: pointer;
-            padding: 12px 0;
-            color: var(--dark-color);
-            font-weight: 500;
-            transition: var(--transition);
-        }
-
-        .history-toggle:hover {
-            color: var(--primary-color);
-        }
-
-        .history-toggle i {
-            transition: transform 0.3s ease;
-        }
-
-        .history-content {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.4s ease;
-        }
-
-        .history-content.expanded {
-            max-height: 300px;
-        }
-
-        .history-list {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            padding: 10px 0;
-        }
-
-        .history-item {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 12px 15px;
-            background: var(--light-color);
-            border-radius: var(--border-radius);
-            cursor: pointer;
-            transition: var(--transition);
-            border-left: 3px solid transparent;
-        }
-
-        .history-item:hover {
-            background: #e2e8f0;
-            border-left-color: var(--primary-color);
-            transform: translateX(5px);
-        }
-
-        .history-item.recent {
-            border-left-color: var(--success-color);
-        }
-
-        .history-domain {
-            font-weight: 500;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .history-actions {
-            display: flex;
-            gap: 5px;
-            opacity: 0;
-            transition: var(--transition);
-        }
-
-        .history-item:hover .history-actions {
-            opacity: 1;
-        }
-
-        .history-btn {
-            background: none;
-            border: none;
-            padding: 6px;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: var(--transition);
-            font-size: 0.8rem;
-        }
-
-        .history-btn.remove {
-            color: var(--danger-color);
-        }
-
-        .history-btn.remove:hover {
-            background: rgba(239, 68, 68, 0.1);
-        }
-
-        .history-btn.use {
-            color: var(--primary-color);
-        }
-
-        .history-btn.use:hover {
-            background: rgba(67, 97, 238, 0.1);
-        }
-
         /* Messages */
         #message {
             text-align: center;
@@ -558,24 +294,24 @@
             padding: 12px;
             border-radius: var(--border-radius);
             display: none;
-            animation: slideIn 0.3s ease-out;
-        }
-
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateY(-10px); }
-            to { opacity: 1; transform: translateY(0); }
         }
 
         .error-message {
-            background: linear-gradient(135deg, #fef2f2, #fecaca);
+            background: #fef2f2;
             color: var(--danger-color);
             border: 1px solid #fecaca;
         }
 
         .success-message {
-            background: linear-gradient(135deg, #f0fdf4, #bbf7d0);
+            background: #f0fdf4;
             color: var(--success-color);
             border: 1px solid #bbf7d0;
+        }
+
+        .info-message {
+            background: #eff6ff;
+            color: var(--primary-color);
+            border: 1px solid #dbeafe;
         }
 
         /* États de chargement */
@@ -600,33 +336,22 @@
             }
             
             .logo img {
-                height: 55px;
+                height: 60px;
             }
             
-            .domain-card {
-                padding: 20px;
+            .logo h1 {
+                font-size: 1.6rem;
             }
             
-            .quick-actions {
-                flex-direction: column;
-            }
-
             .auto-access-icon {
                 width: 70px;
                 height: 70px;
-                font-size: 1.7rem;
+                font-size: 1.8rem;
             }
-        }
-
-        /* Mode clavier mobile */
-        body.keyboard-visible {
-            align-items: flex-start;
-            padding-top: 20px;
-        }
-
-        body.keyboard-visible .domain-container {
-            margin-top: 20px;
-            max-width: 95%;
+            
+            .selection-header h2 {
+                font-size: 1.3rem;
+            }
         }
     </style>
 </head>
@@ -636,6 +361,7 @@
             <div class="logo">
                 <img src="logoAppli.png" alt="VisioPro">
                 <h1>VisioPro</h1>
+                <p>Accès à votre domaine</p>
             </div>
             
             <!-- Écran d'accès automatique -->
@@ -643,8 +369,8 @@
                 <div class="auto-access-icon">
                     <i class="fas fa-rocket"></i>
                 </div>
-                <h2>Accès automatique</h2>
-                <p>Connexion à votre domaine en cours</p>
+                <h2>Connexion automatique</h2>
+                <p>Accès à votre domaine en cours</p>
                 
                 <div class="domain-badge">
                     <i class="fas fa-building"></i>
@@ -656,7 +382,7 @@
                 </div>
                 
                 <p style="color: var(--gray-color); font-size: 0.9rem; margin-bottom: 20px;">
-                    Redirection automatique...
+                    Redirection en cours...
                 </p>
                 
                 <button class="cancel-btn" onclick="cancelAutoAccess()">
@@ -664,53 +390,10 @@
                 </button>
             </div>
             
-            <!-- Mode Accès Rapide -->
-            <div id="quick-access" class="quick-access">
-                <div class="welcome-badge">
-                    <i class="fas fa-rocket"></i>
-                    ACCÈS RAPIDE
-                </div>
-                
-                <div id="recent-domain-card" class="domain-card">
-                    <div class="domain-card-content">
-                        <div class="domain-icon">
-                            <i class="fas fa-building"></i>
-                        </div>
-                        <div class="domain-info">
-                            <h3 id="recent-domain-name">Chargement...</h3>
-                            <p>Votre domaine principal</p>
-                        </div>
-                    </div>
-                    <div class="quick-actions">
-                        <button class="action-btn" onclick="accessRecentDomain()">
-                            <i class="fas fa-play"></i> Accéder
-                        </button>
-                        <button class="action-btn" onclick="showDomainSelection()">
-                            <i class="fas fa-exchange-alt"></i> Changer
-                        </button>
-                    </div>
-                </div>
-                
-                <div class="smart-history">
-                    <div class="history-toggle" onclick="toggleHistory()">
-                        <span>Historique des domaines</span>
-                        <i class="fas fa-chevron-down"></i>
-                    </div>
-                    <div class="history-content" id="history-content">
-                        <div class="history-list" id="history-list">
-                            <!-- Historique chargé dynamiquement -->
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
             <!-- Mode Sélection de Domaine -->
-            <div id="domain-selection" class="domain-selection" style="display: none;">
+            <div id="domain-selection" class="domain-selection">
                 <div class="selection-header">
-                    <button class="back-btn" onclick="showQuickAccess()">
-                        <i class="fas fa-arrow-left"></i>
-                    </button>
-                    <h2>Nouveau domaine</h2>
+                    <h2>Accès à votre domaine</h2>
                 </div>
                 
                 <form id="domain-form">
@@ -732,179 +415,93 @@
                 
                 <div id="message"></div>
                 
-                <div class="smart-history">
-                    <div class="history-toggle" onclick="toggleHistory()">
-                        <span>Domaines récents</span>
-                        <i class="fas fa-chevron-down"></i>
-                    </div>
-                    <div class="history-content expanded" id="selection-history">
-                        <div class="history-list" id="selection-history-list">
-                            <!-- Historique pour la sélection -->
-                        </div>
-                    </div>
+                <div style="text-align: center; margin-top: 20px;">
+                    <p style="color: var(--gray-color); font-size: 0.9rem;">
+                        <i class="fas fa-info-circle"></i> 
+                        Saisissez le nom de votre domaine VisioPro
+                    </p>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        // Clés de stockage - SIMPLIFIÉES
-        const STORAGE_KEYS = {
-            DOMAIN_DATA: 'visiopro_domain_data', // Stocke {domain: "nom", url: "https://..."}
-            LAST_ACCESS: 'visiopro_last_access',
-            AUTO_ACCESS_ENABLED: 'visiopro_auto_access'
-        };
+        // Clé de stockage
+        const STORAGE_KEY = 'visiopro_domain_data';
 
         // Éléments DOM
         const autoAccess = document.getElementById('auto-access');
-        const quickAccess = document.getElementById('quick-access');
         const domainSelection = document.getElementById('domain-selection');
         const autoDomainName = document.getElementById('auto-domain-name');
-        const recentDomainCard = document.getElementById('recent-domain-card');
-        const recentDomainName = document.getElementById('recent-domain-name');
-        const historyContent = document.getElementById('history-content');
-        const historyList = document.getElementById('history-list');
-        const selectionHistory = document.getElementById('selection-history');
-        const selectionHistoryList = document.getElementById('selection-history-list');
         const form = document.getElementById('domain-form');
         const message = document.getElementById('message');
         const domainInput = document.getElementById('domain');
 
         // Variables globales
         let autoAccessTimer = null;
-        let isAutoAccessCancelled = false;
 
         // Initialisation
         document.addEventListener('DOMContentLoaded', function() {
             initApp();
-            setupKeyboardDetection();
         });
 
         function initApp() {
             const domainData = getStoredDomainData();
-            const autoAccessEnabled = localStorage.getItem(STORAGE_KEYS.AUTO_ACCESS_ENABLED) !== 'false';
             
-            // Si domaine existe et auto-access est activé, lancer l'accès automatique IMMÉDIAT
-            if (domainData && domainData.url && autoAccessEnabled && !isAutoAccessCancelled) {
-                console.log('🚀 Accès IMMÉDIAT au domaine stocké:', domainData.domain);
-                immediateAccess(domainData);
+            // Si domaine existe en mémoire, connexion automatique
+            if (domainData && domainData.url) {
+                console.log('🚀 Domaine trouvé en mémoire:', domainData.domain);
+                startAutoAccess(domainData);
             } else {
-                showQuickAccess();
-                loadRecentDomain();
+                // Sinon, afficher la page de saisie
+                console.log('📝 Aucun domaine en mémoire, affichage du formulaire');
+                showDomainSelection();
             }
         }
 
-        function immediateAccess(domainData) {
-            console.log('⚡ Redirection IMMÉDIATE vers:', domainData.url);
-            
-            // Afficher brièvement l'écran d'accès automatique
-            quickAccess.style.display = 'none';
+        function startAutoAccess(domainData) {
+            // Afficher l'écran d'accès automatique
             domainSelection.style.display = 'none';
             autoAccess.style.display = 'block';
             
             autoDomainName.textContent = domainData.domain;
             
-            // Redirection IMMÉDIATE sans appel serveur
-            setTimeout(() => {
-                if (!isAutoAccessCancelled) {
-                    window.location.href = domainData.url;
-                }
-            }, 800); // Court délai pour l'UX
-        }
-
-        function startAutoAccess(domain) {
-            console.log('🔍 Vérification du domaine:', domain);
-            
-            quickAccess.style.display = 'none';
-            domainSelection.style.display = 'none';
-            autoAccess.style.display = 'block';
-            
-            autoDomainName.textContent = domain;
-            
-            // Vérification du domaine (première connexion)
+            // Redirection automatique après 2 secondes
             autoAccessTimer = setTimeout(() => {
-                if (!isAutoAccessCancelled) {
-                    accessDomain(domain, true);
-                }
-            }, 1000);
+                console.log('⚡ Redirection vers:', domainData.url);
+                window.location.href = domainData.url;
+            }, 2000);
         }
 
         function cancelAutoAccess() {
             console.log('⏹️ Accès automatique annulé');
-            isAutoAccessCancelled = true;
             
             if (autoAccessTimer) {
                 clearTimeout(autoAccessTimer);
             }
             
-            localStorage.setItem(STORAGE_KEYS.AUTO_ACCESS_ENABLED, 'false');
-            showQuickAccess();
+            // Supprimer le domaine de la mémoire
+            localStorage.removeItem(STORAGE_KEY);
+            
+            // Revenir à la page de saisie
+            showDomainSelection();
         }
 
         function getStoredDomainData() {
-            const data = localStorage.getItem(STORAGE_KEYS.DOMAIN_DATA);
+            const data = localStorage.getItem(STORAGE_KEY);
             return data ? JSON.parse(data) : null;
         }
 
         function setStoredDomainData(domain, url) {
             const domainData = { domain, url };
-            localStorage.setItem(STORAGE_KEYS.DOMAIN_DATA, JSON.stringify(domainData));
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(domainData));
             console.log('💾 Domaine sauvegardé:', domainData);
-        }
-
-        function loadRecentDomain() {
-            const domainData = getStoredDomainData();
-            
-            if (domainData && domainData.domain) {
-                recentDomainName.textContent = domainData.domain;
-                
-                // Ajouter un badge si accès récent
-                const lastAccess = localStorage.getItem(STORAGE_KEYS.LAST_ACCESS);
-                if (lastAccess) {
-                    const timeDiff = Date.now() - parseInt(lastAccess);
-                    const hoursDiff = timeDiff / (1000 * 60 * 60);
-                    
-                    if (hoursDiff < 24) {
-                        recentDomainCard.innerHTML += `
-                            <div style="position: absolute; top: 10px; right: 10px; background: var(--success-color); color: white; padding: 4px 8px; border-radius: 12px; font-size: 0.7rem; font-weight: 600;">
-                                <i class="fas fa-clock"></i> Récent
-                            </div>
-                        `;
-                    }
-                }
-            } else {
-                recentDomainName.textContent = "Aucun domaine";
-                recentDomainCard.style.opacity = "0.6";
-            }
-        }
-
-        function showQuickAccess() {
-            autoAccess.style.display = 'none';
-            domainSelection.style.display = 'none';
-            quickAccess.style.display = 'block';
-            loadRecentDomain();
-            
-            // Réactiver l'auto-access pour la prochaine fois
-            localStorage.setItem(STORAGE_KEYS.AUTO_ACCESS_ENABLED, 'true');
-            isAutoAccessCancelled = false;
         }
 
         function showDomainSelection() {
             autoAccess.style.display = 'none';
-            quickAccess.style.display = 'none';
             domainSelection.style.display = 'block';
             domainInput.focus();
-        }
-
-        function accessRecentDomain() {
-            const domainData = getStoredDomainData();
-            if (domainData && domainData.url) {
-                console.log('🎯 Accès rapide au domaine stocké');
-                window.location.href = domainData.url;
-            } else if (domainData && domainData.domain) {
-                // Cas où on a le nom mais pas l'URL (ancienne version)
-                accessDomain(domainData.domain);
-            }
         }
 
         // Gestion du formulaire
@@ -916,18 +513,16 @@
             }
         });
 
-        function accessDomain(domain, isAutoAccess = false) {
-            console.log('🌐 Accès au domaine:', domain, isAutoAccess ? '(auto)' : '(manuel)');
+        function accessDomain(domain) {
+            console.log('🌐 Accès au domaine:', domain);
 
-            if (!isAutoAccess) {
-                // État de chargement pour l'accès manuel
-                const submitBtn = form.querySelector('button[type="submit"]');
-                const originalText = submitBtn.innerHTML;
-                submitBtn.innerHTML = '<span class="loading-spinner"></span> Vérification...';
-                submitBtn.disabled = true;
-                
-                showMessage('Vérification du domaine en cours...', 'info');
-            }
+            // État de chargement
+            const submitBtn = form.querySelector('button[type="submit"]');
+            const originalText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<span class="loading-spinner"></span> Vérification...';
+            submitBtn.disabled = true;
+            
+            showMessage('Vérification du domaine en cours...', 'info');
 
             const timestamp = new Date().getTime();
             const url = `https://script.google.com/macros/s/AKfycbzFmMSBTBdw8_DcCC1R0Oice_ecTCrggK4Gp59elsQSwhwdRjuuweo18_z79nTZUv6pgA/exec?action=checkdomain&domain=${encodeURIComponent(domain)}&_=${timestamp}`;
@@ -938,48 +533,30 @@
                     if (data.success) {
                         console.log('✅ Domaine validé, URL:', data.data.url);
                         
-                        if (!isAutoAccess) {
-                            showMessage('✅ Domaine validé! Redirection...', 'success');
-                        }
+                        showMessage('✅ Domaine validé! Redirection...', 'success');
                         
-                        // SAUVEGARDE du domaine et URL
+                        // Sauvegarde du domaine et URL
                         setStoredDomainData(domain, data.data.url);
-                        localStorage.setItem(STORAGE_KEYS.LAST_ACCESS, Date.now().toString());
-                        localStorage.setItem(STORAGE_KEYS.AUTO_ACCESS_ENABLED, 'true');
-                        
                         sessionStorage.setItem("currentDomain", domain);
                         
-                        // Redirection
+                        // Redirection après 1.5 secondes
                         setTimeout(() => {
                             window.location.href = data.data.url;
-                        }, isAutoAccess ? 500 : 1200);
+                        }, 1500);
                     } else {
                         console.log('❌ Domaine non trouvé');
-                        if (!isAutoAccess) {
-                            showMessage('❌ ' + (data.message || 'Domaine non trouvé'), 'error');
-                            form.classList.add('shake');
-                            setTimeout(() => form.classList.remove('shake'), 500);
-                        } else {
-                            showQuickAccess();
-                            showMessage('❌ Domaine non trouvé. Veuillez vérifier le nom.', 'error');
-                        }
+                        showMessage('❌ ' + (data.message || 'Domaine non trouvé'), 'error');
+                        form.classList.add('shake');
+                        setTimeout(() => form.classList.remove('shake'), 500);
                     }
                 })
                 .catch(error => {
                     console.error('Erreur:', error);
-                    if (!isAutoAccess) {
-                        showMessage('⚠️ Erreur de connexion. Réessayez.', 'error');
-                    } else {
-                        showQuickAccess();
-                        showMessage('⚠️ Erreur de connexion. Réessayez.', 'error');
-                    }
+                    showMessage('⚠️ Erreur de connexion. Réessayez.', 'error');
                 })
                 .finally(() => {
-                    if (!isAutoAccess) {
-                        const submitBtn = form.querySelector('button[type="submit"]');
-                        submitBtn.innerHTML = originalText;
-                        submitBtn.disabled = false;
-                    }
+                    submitBtn.innerHTML = originalText;
+                    submitBtn.disabled = false;
                 });
         }
 
@@ -993,22 +570,6 @@
             }, type === 'success' ? 2000 : 4000);
         }
 
-        function setupKeyboardDetection() {
-            let initialHeight = window.innerHeight;
-            window.addEventListener('resize', () => {
-                if (window.innerHeight < initialHeight - 100) {
-                    document.body.classList.add('keyboard-visible');
-                } else {
-                    document.body.classList.remove('keyboard-visible');
-                }
-            });
-        }
-
-        function toggleHistory() {
-            historyContent.classList.toggle('expanded');
-            selectionHistory.classList.toggle('expanded');
-        }
-
         // Animation shake
         const style = document.createElement('style');
         style.textContent = `
@@ -1019,11 +580,6 @@
             }
             .shake {
                 animation: shake 0.3s ease-in-out;
-            }
-            .info-message {
-                background: linear-gradient(135deg, #eff6ff, #dbeafe);
-                color: var(--primary-color);
-                border: 1px solid #dbeafe;
             }
         `;
         document.head.appendChild(style);
